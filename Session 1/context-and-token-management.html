@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 1: Foundations for AI-Assisted Analytics Work. Complete student tutorial adapted for Antigravity." name="description"/><title>Managing Context in Coding Agent Conversations · Session 1 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 1 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 1 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 1</summary><ol><li><a href="session-1-foundations.html">Overview</a></li><li><a href="setup.html">Start the course project</a></li><li><a href="coding-agents-for-analytics.html">Coding Agents for Analytics Work</a></li><li><a href="prompting-and-project-rules.html">Prompting and Project Rules</a></li><li><a href="understanding-your-data.html">Understanding the Data Before Analysis</a></li><li><a href="analyzing-trends-over-time.html">Planning and Running an Analysis</a></li><li><a aria-current="page" href="context-and-token-management.html">Managing Context in Coding Agent Conversations</a></li><li><a href="homework-keyword-analysis.html">Homework: Extend the Keyword Analysis</a></li><li><a href="session-1-qa.html">Session 1 Q&amp;A</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a class="active-session" href="../Session%201/session-1-foundations.html">Session 1</a><a href="../Session%202/session-2-reusable-skills.html">Session 2</a><a href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-1-foundations.html">Session 1</a></p><section class="chapter" id="s1-context-and-token-management">
+<h1>Managing Context in Coding Agent Conversations</h1>
+<p>Antigravity can appear to remember the whole project. It may refer to files it
+inspected earlier, errors it saw, code it edited, or decisions you made several
+prompts ago.</p>
+<p>That behavior is useful, but it can also hide an important boundary. Antigravity does
+not independently remember the project. Each response is generated from the
+context the application gives the model: project instructions, conversation
+history, file excerpts, tool results, command output, and the latest request.</p>
+<p>For analytics work, the practical question is not only what to ask next. It is
+also what should stay in the conversation and what should be written into the
+project.</p>
+<div class="note admonition">
+<p class="admonition-title">The central distinction</p>
+<p>Use the conversation for <strong>working context</strong>.</p>
+<p>Use project files for <strong>saved project context</strong>.</p>
+</div>
+<p>Working context is the temporary material Antigravity needs to continue the current
+task. It includes the current conversation, recent errors, command output,
+notebook cells, file excerpts, and decisions made during the session.</p>
+<p>Saved project context is different. It is information written into files so that
+future humans and future Antigravity sessions can find it. The notebook, <code class="docutils literal notranslate">AGENTS.md</code>,
+<code class="docutils literal notranslate">README.md</code>, <code class="docutils literal notranslate">data/README.md</code>, scripts, tests, and short decision notes can all
+serve this purpose.</p>
+<p>The conversation can help discover facts. The project files should become the
+place where verified facts live.</p>
+<section id="s1-context-and-token-management--why-this-matters">
+<h3>Why this matters</h3>
+<p>A short prompt late in a session can depend on a long history of work:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Make the chart clearer.
+</code></pre></div>
+</div>
+<p>That prompt may depend on earlier decisions about which CSV contains full
+checkout totals, which files are samples, whether 2026 is partial, and what the
+notebook section is trying to show. If those facts live only in the conversation,
+Antigravity may need to carry them forward, summarize them, or rediscover them later.</p>
+<p>That can waste time, tokens, and attention. More importantly, it can make the
+analysis harder to review. A result is not very traceable if the reason for it is
+buried in an old chat turn instead of recorded near the notebook code or in a
+data note.</p>
+<p>In the checkout project, suppose Antigravity learns that
+<code class="docutils literal notranslate">combined_checkout_totals_by_month_usageclass.csv</code> is monthly aggregate data,
+that the two title-level files are balanced samples, that the aggregate file
+should be used for full checkout volume trends, and that 2026 is partial.
+Those facts affect which analysis is valid. They should not live only in the
+chat. They belong in the notebook, <code class="docutils literal notranslate">data/README.md</code>, or another project note.</p>
+</section>
+<section id="s1-context-and-token-management--manage-context-while-you-work">
+<h3>Manage context while you work</h3>
+<p>The goal is not to keep conversations short at all costs. A long session can be
+useful when it stays focused on one task. The problem is old context that no
+longer helps with the current task.</p>
+<p>Use the same conversation when the previous context is still helping: for
+example, while working through one bug, one analysis question, one notebook
+section, one visualization, or one focused data investigation.</p>
+<p>Start fresh when the phase of work changes and the important facts have been
+saved. This is often useful after broad data profiling, before starting a new
+analysis question, after a long debugging sequence, or when Antigravity keeps referring
+to an old assumption.</p>
+<p>A long conversation may be summarized to fit the available context. Summarization can lose exact file names, column names, code details, or the reason for a decision. Before starting a fresh conversation, ask Antigravity to write a handoff note containing the verified facts, decisions, file paths, and next step. Review that note and ask the next conversation to read it. A summary does not replace the analysis saved in project files.</p>
+<div class="tip admonition">
+<p class="admonition-title">Practical rule</p>
+<p>Before starting fresh or compacting, ask: what would the next analyst need to
+know?</p>
+</div>
+</section>
+<section id="s1-context-and-token-management--choose-model-and-reasoning-level">
+<h3>Choose model and reasoning level</h3>
+<p>Context management is not only about what you put in the prompt. It is also
+about choosing the right model behavior for the work.</p>
+<p>A stronger reasoning model or a higher reasoning setting can be useful when the
+task has many dependencies: debugging a notebook failure, comparing possible
+analysis plans, deciding which dataset supports a question, or reviewing whether
+a conclusion follows from the code. Those tasks require the model to hold several
+constraints in mind and test alternatives before it acts.</p>
+<p>That extra reasoning is not free. Reasoning uses tokens, takes time, and still
+depends on the quality of the context you provide. If the model has the wrong
+file, stale assumptions, or a vague goal, more reasoning can produce a more
+elaborate wrong answer.</p>
+<p>Use a faster or lower-reasoning setting when the task is narrow and mechanical:
+fixing a typo, reformatting a small table, renaming a chart title, or applying a
+specific edit you can describe clearly.</p>
+<p>Use a stronger or higher-reasoning setting when the task requires judgment:
+choosing an analysis approach, tracing a result back to source files, debugging
+an error with several possible causes, or reviewing whether a notebook section is
+understandable, reviewable, and traceable.</p>
+<div class="tip admonition">
+<p class="admonition-title">Practical rule</p>
+<p>First improve the context. Then increase reasoning if the task still requires
+more planning, comparison, or debugging.</p>
+</div>
+<p>Use the model selector below the prompt box to inspect or change the model for a new request. Available models and settings depend on your account. Choose Planning when the task needs investigation and an implementation plan; Fast suits a small, well-defined edit. These modes control the workflow and are separate from model selection.</p>
+</section>
+<section id="s1-context-and-token-management--useful-codex-commands"><h3>Useful Antigravity controls</h3>
+<p>Type <code>/</code> in the conversation to see the commands available in your installation. <code>/plan</code> requests a plan before implementation. Use the model selector to change models and the project's conversation list to create a fresh conversation or return to saved work.</p>
+<p>Use <code>@</code> to select a relevant file or folder. Before changing phases, save verified context in the notebook, <code>data/README.md</code>, or a short project note. Conversation controls do not replace those records.</p>
+<p>See <a href="https://antigravity.google/docs/slash-commands/">slash commands</a> and <a href="https://antigravity.google/docs/conversations/">conversations</a>.</p></section>
+<section id="s1-context-and-token-management--optional-run-a-usage-report"><h3>Optional: review usage and your workflow</h3>
+<p>Open <strong>Settings &gt; Models</strong> in Antigravity, or choose <strong>View Usage</strong> from the model selector, to inspect the allowances and reset information shown for your account. Read the <a href="https://antigravity.google/docs/plans">plans documentation</a> for current usage rules.</p>
+<p>Review your recent project conversations. Look for tasks that mixed several phases of work, repeatedly inspected the same files, or produced large outputs where a project note or fresh conversation might have helped.</p>
+<p>Use the account usage display and your conversation history to review where the work became repetitive and which facts you could save for the next conversation.</p></section><div class="key admonition">
+<p class="admonition-title">Key points</p>
+<ul class="simple">
+<li><p>Antigravity conversations are useful working context, not saved project context.</p></li>
+<li><p>Verified facts, decisions, caveats, and reusable commands should be written
+into project files.</p></li>
+<li><p>Start fresh when old context stops helping, but only after the important facts
+have been saved.</p></li>
+<li><p>Match the model and reasoning level to the task: use more reasoning for
+planning, debugging, and review; use less for narrow mechanical edits.</p></li>
+<li><p>Ask for focused evidence instead of large outputs.</p></li>
+</ul>
+</div>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="analyzing-trends-over-time.html" rel="prev"><span>Back</span><strong>Planning and Running an Analysis</strong></a><a class="next" href="homework-keyword-analysis.html" rel="next"><span>Next</span><strong>Homework: Extend the Keyword Analysis</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../assets/navigation.js"></script></body></html>

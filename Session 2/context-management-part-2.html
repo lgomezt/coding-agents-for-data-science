@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 2: Context Management and Agent Skills. Complete student tutorial adapted for Antigravity." name="description"/><title>Context Management Part 2: Choose a Working File Format · Session 2 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 2 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 2 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 2</summary><ol><li><a href="session-2-reusable-skills.html">Overview</a></li><li><a href="setup.html">Continue in the same project</a></li><li><a aria-current="page" href="context-management-part-2.html">Context Management Part 2: Choose a Working File Format</a></li><li><a href="agent-skills.html">Agent Skills</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a href="../Session%201/session-1-foundations.html">Session 1</a><a class="active-session" href="../Session%202/session-2-reusable-skills.html">Session 2</a><a href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-2-reusable-skills.html">Session 2</a></p><section class="chapter" id="s2-context-management-part-2">
+<h1>Context Management Part 2: Choose a Working File Format</h1>
+<p>Session 1 used a notebook because notebooks are a familiar interface for many analysts and learners. They make it easy to see code, outputs, and short explanations together while learning the agent-assisted workflow.</p>
+<p>Session 2 shifts from the notebook as a familiar learning interface to the working file as part of context management. When Antigravity performs repeated analysis work, the file format affects what the agent must read, edit, validate, execute, and inspect.</p>
+<section id="s2-context-management-part-2--objectives">
+<h3>Objectives</h3>
+<ul class="simple">
+<li><p>explain why working file format affects agent tool use</p></li>
+<li><p>distinguish notebook and percent-cell Python files as agent working artifacts</p></li>
+<li><p>interpret token usage with attention to model calls, fresh input, and tool results</p></li>
+<li><p>choose an appropriate working artifact for agent-assisted analysis</p></li>
+</ul>
+<p>This may be easy to believe intuitively. A notebook looks more complex than a Python script, and an <code class="docutils literal notranslate">.ipynb</code> file contains more than source code. The mechanism matters because Antigravity does not only read the file once. During a task, it may inspect the file, edit it, run it, inspect outputs, repair errors, and use those tool results as context for later model calls.</p>
+<div class="note admonition">
+<p class="admonition-title">Central Claim</p>
+<p>The working artifact is part of context management because it changes the tool work Antigravity must do. More tool work can mean more model calls, more fresh input, more cumulative context, and more runtime.</p>
+</div>
+</section>
+<section id="s2-context-management-part-2--start-with-one-agent-turn">
+<h3>Start With One Agent Turn</h3>
+<p>To see why file format can affect token usage, first identify the unit of work being repeated. A single user request can require several model calls and tool calls before the final response. Each model call receives context, decides a next step, and may ask a tool to inspect, edit, run, or validate something in the project.</p>
+<p>An agent turn is more than a chat message. The model receives input, decides the next step, may call tools, receives tool results, and may repeat that loop before answering.</p>
+<figure class="align-default" id="s2-context-management-part-2--id1">
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-09.png"><img alt="Diagram of one agent turn showing user task, input context, model calls, tool calls, tool results, and final response" src="../assets/example-32a1d5c4904a.png"/>
+</a>
+<figcaption>
+<p><span class="caption-text">One user request can produce several model calls. Tool results from one call can become input to the next call.</span></p>
+</figcaption>
+</figure>
+<p>This matters because the working file is one of the objects the tools operate on. A file format that requires more inspection, validation, or output extraction can create more tool work during the same analysis task.</p>
+</section>
+<section id="s2-context-management-part-2--why-file-format-changes-tool-use">
+<h3>Why File Format Changes Tool Use</h3>
+<p>A Jupyter notebook is stored as JSON rather than as a simple script. An <code class="docutils literal notranslate">.ipynb</code> file can contain code, markdown, outputs, execution counts, widget state, metadata, and nested structure that must remain valid.</p>
+<p>A percent-cell <code class="docutils literal notranslate">.py</code> file is plain Python text with cell markers. VS Code’s Jupyter extension can treat the markers as cells, while the file remains easy to edit as source code.</p>
+<figure class="align-default" id="s2-context-management-part-2--id2">
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-10.png"><img alt="Comparison of notebook JSON structure and percent-cell Python source structure" src="../assets/example-8fa92afa663e.png"/>
+</a>
+<figcaption>
+<p><span class="caption-text">A notebook mixes source, outputs, execution state, and metadata. A percent-cell Python file keeps the working source as plain text.</span></p>
+</figcaption>
+</figure>
+<p>A notebook may require the agent to do extra tool work:</p>
+<ul class="simple">
+<li><p>preserve valid JSON structure</p></li>
+<li><p>add or update cells without corrupting the file</p></li>
+<li><p>execute the notebook</p></li>
+<li><p>inspect saved cell outputs</p></li>
+<li><p>decide which outputs matter</p></li>
+<li><p>remove or avoid stale outputs</p></li>
+<li><p>validate notebook structure after edits</p></li>
+</ul>
+<p>A <code class="docutils literal notranslate">.py</code> file gives the agent a simpler source artifact:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code># %%
+from pathlib import Path
+import pandas as pd
+
+checkout_totals = pd.read_csv("data/combined_checkout_totals_by_month_usageclass.csv")
+
+# %%
+complete_years = checkout_totals[checkout_totals["checkout_year"].between(2006, 2025)]
+annual_totals = (
+    complete_years
+    .groupby(["checkout_year", "usageclass"], as_index=False)["total_checkouts"]
+    .sum()
+)
+
+# %%
+Path("outputs").mkdir(exist_ok=True)
+annual_totals.to_csv("outputs/annual_checkout_totals.csv", index=False)
+</code></pre></div>
+</div><p>The aggregate starts partway through 2005 and ends partway through 2026. This example uses 2006 through 2025 for complete-year totals and creates the output folder before saving the CSV.</p>
+<p>The <code class="docutils literal notranslate"># %%</code> markers preserve a cell-like workflow, but the agent is editing ordinary Python text. Outputs can be saved separately as CSV files, images, markdown summaries, or dashboard-ready extracts.</p>
+</section>
+<section id="s2-context-management-part-2--how-extra-tool-work-becomes-extra-context">
+<h3>How Extra Tool Work Becomes Extra Context</h3>
+<p>The file-format difference matters because tool results can become later input. If an agent validates notebook JSON, extracts cell output, receives an execution error, or inspects a generated artifact, that result can become part of the working context for the next model call.</p>
+<p>More tool work can therefore mean:</p>
+<ul class="simple">
+<li><p>more model calls</p></li>
+<li><p>more command output and tool results</p></li>
+<li><p>more fresh input</p></li>
+<li><p>more cumulative context</p></li>
+<li><p>more chances to inspect the same information repeatedly</p></li>
+</ul>
+<p>For context management, prompt length is only one part of the problem. The working artifact also determines how much tool work the agent must perform.</p>
+</section>
+<section id="s2-context-management-part-2--why-token-type-matters">
+<h3>Why Token Type Matters</h3>
+<p>Token usage is not a single kind of activity. Some tokens are material the model reads, some are material the model writes, and some input tokens are repeated context that the system can cache. These distinctions matter because agent workflows often differ in how much new file content, command output, tool result text, and conversation history they add over time.</p>
+<p>A <strong>token</strong> is a small piece of text or data the model reads or writes. When reviewing agent usage, separate these categories:</p>
+<ul class="simple">
+<li><p><strong>Input tokens</strong>: what the model receives, including instructions, conversation history, file contents, command output, errors, and tool results.</p></li>
+<li><p><strong>Output tokens</strong>: what the model generates, including explanations, code, edits, and final responses.</p></li>
+<li><p><strong>Cached input</strong>: repeated context the system recognizes and can reuse, such as stable instructions or earlier conversation context.</p></li>
+<li><p><strong>Fresh input</strong>: new context added on a turn, such as changed files, fresh command output, new errors, or newly inspected results.</p></li>
+</ul>
+<p>Cached input is still context, but it is less expensive than fresh input. Fresh input is especially important for understanding workflow friction because it often reflects new material the agent had to inspect: a changed file, a notebook output, an error message, or a tool result.</p>
+</section>
+<section id="s2-context-management-part-2--a-file-format-experiment">
+<h3>A File-Format Experiment</h3>
+<p>The following example compares notebook and percent-cell Python workflows for the same analysis task. It illustrates how the working file format can affect tool use, token usage, and runtime.</p>
+<p>In this comparison, agents performed similar Seattle Public Library checkout analyses. The analysis question was the same: compare physical and digital borrowing trends over time. The main difference was the working artifact:</p>
+<ul class="simple">
+<li><p>one workflow used an <code class="docutils literal notranslate">.ipynb</code> notebook</p></li>
+<li><p>one workflow used a percent-cell <code class="docutils literal notranslate">.py</code> file</p></li>
+</ul>
+<p>The controlled comparison is the easiest part to interpret. Two agents were given the same data, the same analysis question, and similar deliverable requirements. The intended difference was the durable working source:</p>
+<div class="pst-scrollable-table-container"><div class="table-wrap"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Workflow</p></th>
+<th class="head text-right"><p>Total tokens</p></th>
+<th class="head text-right"><p>Fresh input</p></th>
+<th class="head text-right"><p>Model calls</p></th>
+<th class="head text-right"><p>Runtime</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Direct <code class="docutils literal notranslate">.ipynb</code></p></td>
+<td class="text-right"><p>1,395,748</p></td>
+<td class="text-right"><p>129,036</p></td>
+<td class="text-right"><p>24</p></td>
+<td class="text-right"><p>8m 30s</p></td>
+</tr>
+<tr class="row-odd"><td><p>Percent-cell <code class="docutils literal notranslate">.py</code></p></td>
+<td class="text-right"><p>719,688</p></td>
+<td class="text-right"><p>51,000</p></td>
+<td class="text-right"><p>14</p></td>
+<td class="text-right"><p>3m 40s</p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<figure class="align-default" id="s2-context-management-part-2--id3">
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-12.png"><img alt="Bar charts comparing total tokens and runtime for direct notebook and percent-cell Python workflows" src="../assets/example-71cd33af6c05.png"/>
+</a>
+<figcaption>
+<p><span class="caption-text">In the controlled comparison, the notebook workflow used more total tokens and took longer.</span></p>
+</figcaption>
+</figure>
+<p>The exact multiplier is less important than the mechanism:</p>
+<blockquote>
+<div><p>The notebook workflow required more model calls and more tool work. That extra work accumulated more context.</p>
+</div></blockquote>
+<p>The tool-call categories showed the source of the difference. The direct notebook workflow included notebook-specific work such as structure validation and output extraction. The percent-cell workflow still required execution and output inspection, but it avoided much of the notebook-specific handling.</p>
+<figure class="align-default" id="s2-context-management-part-2--id4">
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-13.png"><img alt="Token use by model call for notebook and percent-cell Python workflows" src="../assets/example-85d70920a190.png"/>
+</a>
+<figcaption>
+<p><span class="caption-text">The notebook workflow took more model calls. Each call is another chance for context, tool output, and file state to enter the next step.</span></p>
+</figcaption>
+</figure>
+<p>A less constrained agent-native comparison was noisier, but it pointed in the same direction: the notebook path again used more total tokens, more model calls, and more runtime. That consistency is why the recommendation is practical even though the exact multiplier is not universal.</p>
+<div class="note admonition">
+<p class="admonition-title">More detail</p>
+<p>For the complete charts, tool-call categories, cache notes, and starting prompts, see the full <a class="reference external" href="https://analytics-accelerator.colab.duke.edu/file-format-evaluation/">file-format evaluation report</a>.</p>
+</div>
+</section>
+<section id="s2-context-management-part-2--what-this-means-for-your-work">
+<h3>What This Means For Your Work</h3>
+<p>For the rest of this course, the destination is a dashboard or shareable analysis artifact. That changes the default working pattern.</p>
+<div class="key admonition">
+<p class="admonition-title">Working Recommendation</p>
+<p>For agent-heavy analysis, prefer a plain <code class="docutils literal notranslate">.py</code> file or a percent-cell <code class="docutils literal notranslate">.py</code> file as the working artifact. Use notebooks only when notebook-style teaching, presentation, or review is part of the task.</p>
+</div><div class="exercise admonition"><p class="admonition-title">Update the project rules for Python source</p><p>The rules you wrote in Session 1 require notebook analysis. Update them for the working format described here before continuing:</p><pre class="prompt"><code>Update AGENTS.md in the Session 1 project so accepted analysis can use plain or percent-cell Python source files, with generated CSVs, figures, checks, and short explanations saved in the project. Replace the notebook-only requirements where they conflict with this workflow. Keep the rules about readable code, source-data protection, explicit transformations, checking row meaning, and traceable results. Keep the Session 1 notebook as a record of that session. Show me the revised rules.</code></pre><p>Review the rules and start a new conversation in this project before testing the next task.</p></div>
+<p>Use a <code class="docutils literal notranslate">.py</code> or percent-cell <code class="docutils literal notranslate">.py</code> file when:</p>
+<ul class="simple">
+<li><p>Antigravity will iterate through several edit-run-inspect cycles.</p></li>
+<li><p>You expect to create dashboard-ready data extracts.</p></li>
+<li><p>You want cleaner diffs and easier review.</p></li>
+<li><p>You want outputs saved as separate files.</p></li>
+<li><p>You do not need notebook-style explanation beside every cell.</p></li>
+</ul>
+<p>Use a notebook intentionally when:</p>
+<ul class="simple">
+<li><p>the notebook itself is the teaching or review artifact</p></li>
+<li><p>you need rich inline display while presenting</p></li>
+<li><p>collaborators expect to read the analysis as a notebook</p></li>
+<li><p>the value of notebook presentation outweighs the extra agent workflow cost</p></li>
+</ul>
+<p>The goal is to choose a working artifact that matches the job, so the agent spends its effort on analysis rather than artifact maintenance.</p>
+<div class="tip admonition">
+<p class="admonition-title">Practical Rule</p>
+<p>Use Python source while Antigravity is iterating on the analysis. Use a notebook or report when the analysis needs to be read as a narrative artifact.</p>
+</div>
+<div class="key admonition">
+<p class="admonition-title">Key points</p>
+<ul class="simple">
+<li><p>File format is part of context management.</p></li>
+<li><p>Notebooks can require extra structure validation and output inspection.</p></li>
+<li><p>Extra tool work can increase model calls, fresh input, runtime, and total tokens.</p></li>
+<li><p>For agent-heavy analysis in this course, prefer <code class="docutils literal notranslate">.py</code> or percent-cell <code class="docutils literal notranslate">.py</code> as the working artifact.</p></li>
+<li><p>Use notebooks when the notebook format is part of the task.</p></li>
+</ul>
+</div>
+</section>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="setup.html" rel="prev"><span>Back</span><strong>Continue in the same project</strong></a><a class="next" href="agent-skills.html" rel="next"><span>Next</span><strong>Agent Skills</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../assets/navigation.js"></script></body></html>

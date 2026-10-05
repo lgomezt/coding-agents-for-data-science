@@ -1,0 +1,46 @@
+erDiagram
+    COMBINED_MONTHLY_TOTALS {
+        int checkout_year
+        int checkout_month
+        string usageclass
+        int total_checkouts
+        int month_total_checkouts
+        float usageclass_share
+        int title_month_rows
+        int sample_rows
+    }
+
+    DIGITAL_TITLE_SAMPLE {
+        string usageclass
+        string checkouttype
+        string materialtype
+        int checkoutyear
+        int checkoutmonth
+        int checkouts
+        string title
+        string isbn
+        string creator
+        string subjects
+        string publisher
+        string publicationyear
+        string sample_design
+    }
+
+    PHYSICAL_TITLE_SAMPLE {
+        string usageclass
+        string checkouttype
+        string materialtype
+        int checkoutyear
+        int checkoutmonth
+        int checkouts
+        string title
+        string isbn
+        string creator
+        string subjects
+        string publisher
+        string publicationyear
+        string sample_design
+    }
+
+    COMBINED_MONTHLY_TOTALS ||--o{ DIGITAL_TITLE_SAMPLE : "monthly context by year-month-usageclass"
+    COMBINED_MONTHLY_TOTALS ||--o{ PHYSICAL_TITLE_SAMPLE : "monthly context by year-month-usageclass"

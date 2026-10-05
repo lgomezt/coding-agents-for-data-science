@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 2: Context Management and Agent Skills. Complete student tutorial adapted for Antigravity." name="description"/><title>Agent Skills · Session 2 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 2 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 2 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 2</summary><ol><li><a href="session-2-reusable-skills.html">Overview</a></li><li><a href="setup.html">Continue in the same project</a></li><li><a href="context-management-part-2.html">Context Management Part 2: Choose a Working File Format</a></li><li><a aria-current="page" href="agent-skills.html">Agent Skills</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a href="../Session%201/session-1-foundations.html">Session 1</a><a class="active-session" href="../Session%202/session-2-reusable-skills.html">Session 2</a><a href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-2-reusable-skills.html">Session 2</a></p><section class="chapter" id="s2-agent-skills">
+<h1>Agent Skills</h1>
+<p>In Session 1, you used prompts and <code class="docutils literal notranslate">AGENTS.md</code> to shape how Antigravity worked in one project. In the previous lesson, you saw that the working file format also shapes the agent’s behavior.</p>
+<p>Skills solve a related problem: repeated instructions should not live only in the conversation.</p>
+<p>When the same guidance appears in many prompts, that guidance may belong in a skill.</p>
+<section id="s2-agent-skills--the-problem-skills-solve">
+<h3>The Problem Skills Solve</h3>
+<p>Suppose a project repeatedly needs figures for analysis presentations:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Use Duke colors. Make the figure readable on a PowerPoint slide. Use large text
+and markers. Do not put a title on the figure. Save the figure as a high-quality
+PNG.
+</code></pre></div>
+</div>
+<p>The instruction can work in one prompt, but repeating it manually creates several problems. For example, you may forget part of the instruction, or it may be inconvenient if the task is complex.</p>
+<p>A skill records that repeated workflow in a reusable instruction file.</p>
+</section>
+<section id="s2-agent-skills--prompt-agents-md-or-skill">
+<h3>Prompt, AGENTS.md, or Skill?</h3>
+<p>These three instruction types do different jobs:</p>
+<div class="pst-scrollable-table-container"><div class="table-wrap"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Instruction type</p></th>
+<th class="head"><p>Best use</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Prompt</p></td>
+<td><p>The immediate task: “Analyze this file” or “revise this chart.”</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate">AGENTS.md</code></p></td>
+<td><p>Standing rules for one project: audience, file locations, raw-data rules, review expectations.</p></td>
+</tr>
+<tr class="row-even"><td><p>Skill</p></td>
+<td><p>Reusable workflow guidance for a type of task across projects.</p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>In Session 1, <code class="docutils literal notranslate">AGENTS.md</code> told Antigravity how to work in the checkout-analysis project. A skill is more portable. It can define a reusable method for Duke-style figures, dashboard accessibility review, pedagogical explanations, or recurring data-validation checks.</p>
+</section>
+<section id="s2-agent-skills--what-is-a-skill">
+<h3>What Is a Skill?</h3>
+<p>An agent skill is a reusable instruction set that extends an AI agent with specialized knowledge or a procedural workflow. In practice, a skill is usually a folder or repository containing:</p>
+<ul class="simple">
+<li><p>a <code class="docutils literal notranslate">SKILL.md</code> file</p></li>
+<li><p>optional supporting files, such as templates, examples, scripts, or reference material</p></li>
+</ul>
+<p>The core of a skill is <code class="docutils literal notranslate">SKILL.md</code>. Supporting files are optional. For example, Jessica’s <a class="reference external" href="https://gitlab.oit.duke.edu/jn242/skills/-/blob/main/skills/pedagogy/SKILL.md?ref_type=heads">pedagogy skill</a> starts with metadata that lets an agent discover when the skill applies, followed by instructions for how to teach. For example, a skill on pedagogy might have the following instructions:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><code>---
+name: pedagogy
+description: "Use this skill when creating educational content that needs to genuinely teach, not just inform."
+---
+</code></pre></div></div><p>These are loaded into agent context at start time, and the agent may read the rest of the file when it encounters a relevant task.</p>
+</section><section id="s2-agent-skills--how-skills-are-loaded">
+<h3>How Skills Are Loaded</h3>
+<p>Agents do not need to load every full skill into context all the time. Skills use a pattern called <strong>progressive disclosure</strong>. The <a class="reference external" href="https://agentskills.io/home">Agent Skills documentation</a> describes this in three stages:</p>
+<ul class="simple">
+<li><p><strong>Discovery</strong>: the agent sees the name and description, enough to know when the skill might be relevant.</p></li>
+<li><p><strong>Activation</strong>: when a task matches the skill, the agent reads the full <code>SKILL.md</code>.</p></li>
+<li><p><strong>Execution</strong>: the agent follows the instructions and may load supporting files or run bundled scripts if the skill calls for them.</p></li>
+</ul>
+<p>A skill works because the agent can discover it, read it when relevant, and apply the written instructions to the current task.</p>
+<p>You can also explicitly invoke a skill in a prompt:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>/pedagogy Draft this lesson so students understand why the workflow works, not
+just what commands to run.
+</code></pre></div></div>
+<p>The <code>/skill-name</code> pattern tells the agent which reusable instruction set should shape the response.</p>
+</section>
+<section id="s2-agent-skills--where-skills-live">
+<h3>Where Skills Live</h3>
+<p>Antigravity looks for skills in well-known locations. These locations include:</p>
+<div class="pst-scrollable-table-container"><div class="table-wrap"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scope</p></th>
+<th class="head"><p>Example locations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Global skills</p></td>
+<td><p><code>~/.gemini/config/skills/&lt;skill-name&gt;/SKILL.md</code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Project skills</p></td>
+<td><p><code>.agents/skills/&lt;skill-name&gt;/SKILL.md</code></p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Global skills are available across projects. Project skills travel with a repository and are useful when everyone working in the project should share the same workflow guidance.</p>
+<p>Use a project skill when the instruction is part of how this project works. Use a global skill when the instruction is part of how you personally work across many projects.</p>
+</section>
+<section id="s2-agent-skills--skill-effects">
+<h3>Skill Effects</h3>
+<p>The same prompt can produce different outputs when different skills are active. In the deck example below, a project used skills to steer an AI art system connected to a physical drawing device. The prompt stayed the same, but the skill changed the method and style.</p>
+<figure class="align-default" id="s2-agent-skills--id1">
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-17.png"><img alt="Three line-art outputs produced from the same prompt using different skills: line art, algorithmic art, and Bauhaus art" src="../assets/example-bde97ea5d8e2.png"/>
+</a>
+<figcaption>
+<p><span class="caption-text">Skills can make the agent apply a specified method to the same request.</span></p>
+</figcaption>
+</figure>
+<p>For analytics, the difference may be less visually dramatic but operationally useful. A skill can direct Antigravity to:</p>
+<ul class="simple">
+<li><p>always profile data before modeling</p></li>
+<li><p>use a specific chart style</p></li>
+<li><p>validate dashboard-ready output files</p></li>
+<li><p>check accessibility issues in a chart</p></li>
+<li><p>produce a stakeholder-ready summary format</p></li>
+</ul>
+</section>
+<section id="s2-agent-skills--skills-repositories">
+<h3>Skills Repositories</h3>
+<p>Skills can be shared through Git repositories. These collections provide examples
+to inspect, install, or adapt:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://gitlab.oit.duke.edu/ai-tech/skills/">Duke AI skills collection</a></p></li>
+<li><p><a class="reference external" href="https://github.com/openai/skills">OpenAI skills collection</a></p></li>
+<li><p><a class="reference external" href="https://github.com/anthropics/skills">Anthropic skills collection</a></p></li>
+</ul>
+<p>Review a skill before using it. A skill can include instructions, scripts,
+templates, and other supporting files, so it should be treated as project code
+rather than only as prompt text.</p>
+</section>
+<section id="s2-agent-skills--installing-or-creating-skills"><h3>Installing or Creating Skills</h3>
+<p>Some skills can be installed from a Git repository with <code>npx skills</code>:</p>
+<p>If <code>npx</code> is unavailable, use the <a href="../Antigravity%20Tutorial/working-with-coding-agents.html#node-setup">Node.js setup instructions</a> in the introductory tutorial.</p>
+<p>Run the installation command from the <code>Session 1</code> project folder. Replace <code>SKILL_REPO</code> with the skill repository you reviewed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><code>npx skills add SKILL_REPO --agent antigravity --copy
+</code></pre></div></div>
+<p>If a repository contains multiple skills, specify the one you want:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><code>npx skills add SKILL_REPO --skill SKILL_NAME --agent antigravity --copy
+</code></pre></div></div>
+<p>You can also ask Antigravity to help create a project skill:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Create a project skill at .agents/skills/duke-figures/SKILL.md, with YAML
+frontmatter defining its name and description.
+
+I want to create a skill for producing figures when I'm doing
+data analysis. I want to use the Duke color scheme for my figures, and I want
+the output to be high quality and appropriate for PowerPoint. The text and
+markers should be large and readable, and figures should not have titles.
+</code></pre></div></div>
+<p>That prompt describes the reusable workflow standard that the skill should capture.</p>
+<p>Start a new conversation in the same project after creating or installing a skill. Antigravity discovers skills when a conversation starts. To invoke the figure skill explicitly, begin your prompt with <code>/duke-figures</code>.</p></section>
+<section id="s2-agent-skills--test-a-skill-like-an-analyst">
+<h3>Test a Skill Like an Analyst</h3>
+<p>Evaluate a skill before relying on it.</p>
+<p>Use a before-and-after comparison:</p>
+<ol class="arabic simple">
+<li><p>Ask Antigravity to perform the task without the skill.</p></li>
+<li><p>Save or inspect the output.</p></li>
+<li><p>Ask Antigravity to perform a similar task with the skill.</p></li>
+<li><p>Compare the outputs against the behavior the skill was supposed to produce.</p></li>
+<li><p>Revise the skill if the difference is not clear enough.</p></li>
+</ol>
+<p>For the Duke figure example, you might check:</p>
+<ul class="simple">
+<li><p>Are the colors appropriate?</p></li>
+<li><p>Is the text readable on a slide?</p></li>
+<li><p>Are markers and lines large enough?</p></li>
+<li><p>Did the figure avoid unnecessary titles?</p></li>
+<li><p>Was the output saved at useful resolution?</p></li>
+<li><p>Would the figure work in a dashboard presentation?</p></li>
+</ul>
+<p>This evaluation checks whether the written skill produces the intended behavior.</p>
+<div class="key admonition">
+<p class="admonition-title">Key points</p>
+<ul class="simple">
+<li><p>Prompts guide the immediate task.</p></li>
+<li><p><code class="docutils literal notranslate">AGENTS.md</code> guides one project.</p></li>
+<li><p>Skills guide reusable workflows across tasks or projects.</p></li>
+<li><p>A skill is usually <code class="docutils literal notranslate">SKILL.md</code> plus optional supporting files.</p></li>
+<li><p>Skills are loaded through discovery, activation, and execution.</p></li>
+<li><p>Test a skill by comparing behavior before and after using it.</p></li>
+</ul>
+</div>
+</section>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="context-management-part-2.html" rel="prev"><span>Back</span><strong>Context Management Part 2: Choose a Working File Format</strong></a><a class="next" href="../Session%203/session-3-analysis-to-dashboard.html" rel="next"><span>Next</span><strong>Session 3</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../assets/navigation.js"></script></body></html>

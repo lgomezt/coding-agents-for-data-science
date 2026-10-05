@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 3: From Analysis to Dashboard. Complete student tutorial adapted for Antigravity." name="description"/><title>Multi-Agent Workflows · Session 3 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 3 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 3 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 3</summary><ol><li><a href="session-3-analysis-to-dashboard.html">Overview</a></li><li><a href="setup.html">Continue in the same project</a></li><li><a href="building-datasets-with-antigravity.html">Building Datasets with Antigravity</a></li><li><a aria-current="page" href="multi-agent-workflows.html">Multi-Agent Workflows</a></li><li><a href="static-dashboard-prompts.html">Build and Deploy a Static Dashboard: Prompt Notes</a></li><li><a href="open-dataset-starting-points.html">Open Dataset Starting Points</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a href="../Session%201/session-1-foundations.html">Session 1</a><a href="../Session%202/session-2-reusable-skills.html">Session 2</a><a class="active-session" href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-3-analysis-to-dashboard.html">Session 3</a></p><section class="chapter" id="s3-multi-agent-workflows">
+<h1>Multi-Agent Workflows</h1>
+<p>In Session 2, you saw that Antigravity’s working file format changes the amount of tool work it has to do. You also saw that reusable instructions can make repeated workflows more consistent.</p>
+<p>In this lesson, you will use Antigravity subagents to divide a dashboard data-preparation project into separate analysis tasks. The example continues with the Seattle Public Library checkout data. The goal is to prepare the data files that a dashboard can read.</p>
+<p>A <strong>multi-agent workflow</strong> uses one main agent to coordinate the work and one or more additional agents to handle focused assignments. The main Antigravity session is the <strong>parent agent</strong>. A <strong>subagent</strong> is a separate agent run that receives a specific task from the parent, works in its own context, and returns findings, file changes, command output, or a summary.</p>
+<figure class="align-default" id="s3-multi-agent-workflows--id1">
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/agent_chart.png"><img alt="Diagram comparing a single agent completing tasks sequentially with a multi-agent workflow where a supervisor assigns tasks in parallel" src="../assets/example-f2a8717a59c7.png"/>
+</a>
+<figcaption>
+<p><span class="caption-text">A single agent works through the tasks in sequence. In a multi-agent workflow, the parent agent acts like the supervisor: it divides the work into bounded assignments, then reviews the results before integrating them.</span></p>
+</figcaption>
+</figure>
+<p>Subagents are useful when a project can be divided into focused tasks that do not all require the same context at the same time. In analytics, those tasks might be separate analysis questions, separate validation checks, or separate parts of a dashboard build. In this lesson’s dashboard example, one subagent can work on annual digital vs. physical share, another can work on sampled title popularity, and another can work on material-type shares. Each worker owns an analysis task: the percent-cell Python script, the CSV files that script writes, and any notes needed to interpret those files.</p>
+<section id="s3-multi-agent-workflows--objectives">
+<h3>Objectives</h3>
+<ul class="simple">
+<li><p>explain what a parent agent and subagent are</p></li>
+<li><p>use worker subagents to implement separate analysis tasks</p></li>
+<li><p>explain why a smaller worker model can be appropriate for bounded work</p></li>
+<li><p>specify machine-readable outputs for dashboard data preparation</p></li>
+<li><p>review worker outputs before dashboard code depends on them</p></li>
+</ul>
+</section>
+<section id="s3-multi-agent-workflows--why-use-subagents-here">
+<h3>Why Use Subagents Here?</h3>
+<p>A single Antigravity session can complete an entire analysis project. That is often the right choice when the task is small or when every step depends closely on the previous step.</p>
+<p>The Seattle Library dashboard project has several analysis questions that can be developed separately:</p>
+<ol class="arabic simple">
+<li><p>How has digital vs. physical checkout share changed by year?</p></li>
+<li><p>What was the most checked out sampled title each year?</p></li>
+<li><p>What material types make up sampled digital and physical checkouts?</p></li>
+</ol>
+<p>Those questions use related data, but they do not require one agent to hold every implementation detail at the same time. A parent agent can coordinate the project, while subagents handle focused pieces.</p>
+<p>Antigravity supports subagents that are commonly used in focused roles:</p>
+<ul class="simple">
+<li><p><strong>Worker subagents</strong> implement a bounded task. They need a clear write scope and a verification command.</p></li>
+<li><p><strong>Checker subagents</strong> review outputs against a defined standard. They should usually be read-only.</p></li>
+</ul>
+<div class="tip admonition">
+<p class="admonition-title">Practical rule</p>
+<p>Use worker subagents after the parent can describe the analysis task, source data, output file, and verification check.</p>
+</div>
+</section>
+<section id="s3-multi-agent-workflows--start-with-the-parent-agent">
+<h3>Start With the Parent Agent</h3>
+<p>The parent agent should begin with the project rules and the assignment frame. In this workflow, the data source is already documented, so the parent should read the project rules and the Seattle Public Library data notes directly before defining the worker tasks.</p>
+<p>This lesson also changes the working artifact. Earlier work used a notebook. For the dashboard workflow, the analysis should move into percent-cell Python files so the scripts can be rerun and can write standalone, machine-readable CSV outputs.</p>
+<p>Start a new conversation in the existing <code>Session 1</code> project, choose <strong>Local</strong>, and send this prompt:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>We are preparing data for a Seattle Public Library checkout dashboard.
+
+Read AGENTS.md and data/README.md.
+
+For this lesson, move the analysis out of notebooks and into percent-cell
+Python scripts that write dashboard-ready CSV files.
+
+Do not edit files yet. First, summarize the project rules and the data context:
+- what one row represents in each checkout file
+- which source file supports each dashboard analysis
+- which analyses use complete data or sampled data
+- what caveats the worker prompts should preserve
+</code></pre></div>
+</div>
+<p>Notice somethings about this prompt:</p>
+<ul class="simple">
+<li><p>You tell Antigravity you want to use <code class="docutils literal notranslate">.py</code> files instead of notebooks.</p></li>
+<li><p>Name the project files in the prompt. You can also type <code>@</code> and select <code>AGENTS.md</code> or <code>data/README.md</code> from Antigravity’s file picker to attach the existing file.</p></li>
+</ul>
+<p>The parent should extract rules like these:</p>
+<ul class="simple">
+<li><p>raw data files must not be modified</p></li>
+<li><p>accepted analysis belongs in percent-cell Python files</p></li>
+<li><p>each analysis script should write machine-readable CSV files</p></li>
+<li><p>each dashboard data file needs provenance</p></li>
+</ul>
+</section>
+<section id="s3-multi-agent-workflows--launch-worker-subagents">
+<h3>Launch Worker Subagents</h3>
+<p>After the parent summarizes the data context, ask it to launch worker subagents for the separate analyses.
+You can describe the goal in plain text.
+The parent should use the documented data context to turn that goal into specific worker assignments.</p>
+<p>The workers need to produce data that the dashboard can reuse. That means the analysis should be separate from the visualization: percent-cell Python scripts define the calculations and write standalone CSV files with predictable columns, then the dashboard reads those CSV files.</p>
+<div class="key admonition">
+<p class="admonition-title">Why a machine-readable file?</p>
+<p>A dashboard should read data from a file, not from a chat summary or a chart-specific calculation hidden in the visualization code. A standalone CSV gives the project a reusable handoff: the analysis script creates the data, the CSV stores the result in rows and columns, and the dashboard renders that reviewed result. The same file can also be inspected, tested, reused in another view, or shared with someone who does not need the dashboard code.</p>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Using the data context you summarized, launch concurrent worker subagents. Configure the workers with model: flash in their custom subagent definitions.
+
+Each agent should output data in a machine-readable format.
+
+Create separate workers to (1) calculate annual digital vs. physical checkout share, (2) identify the most checked out sampled titles by year, preserving all title metadata with total checkouts, and (3) calculate sampled material-type shares by year separately for digital and physical checkouts. Each worker should write percent-cell Python code and write the CSV files from that code. Each analysis that exists for both physical and digital should have separate files for physical and digital. There should be five output files - one for physical vs digital share by year, and two each for analysis (2) and (3).
+
+After the agents are done, map the provenance of each file to scripts by documenting in a markdown file in the dashboard data directory including how to regenerate the data.
+
+Save the five files in dashboard_data/ as annual_digital_physical_share.csv, digital_top_sampled_titles_by_year.csv, physical_top_sampled_titles_by_year.csv, digital_material_type_shares_by_year.csv, and physical_material_type_shares_by_year.csv. These filenames will be used in the dashboard prompts.
+</code></pre></div>
+</div>
+<p>This prompt leaves the detailed decomposition to the parent. The parent should use the data documentation to decide which source files, grouping keys, output paths, caveats, and checks belong in each worker prompt. A worker assignment is ready when the parent can state the input data, the calculation, the output file, the expected columns, the provenance requirement, and the verification check.</p>
+<p>The smaller model is appropriate here because the parent has already scoped the work. Antigravity supports <code>model: flash</code> in custom subagent definitions. The Flash workers are not discovering the project direction. They are executing bounded analysis tasks with source files, output expectations, and caveats supplied by the parent. Use a smaller worker model when the assignment has known inputs, known outputs, limited judgment calls, and a concrete verification command. Keep the parent or a stronger model responsible when the task still requires choosing the analysis strategy, resolving ambiguous data meaning, or making dashboard design tradeoffs.</p>
+</section>
+<section id="s3-multi-agent-workflows--watch-the-worker-threads">
+<h3>Watch the Worker Threads</h3>
+<p>While the workers are running, you can inspect what each subagent is doing. In Antigravity, open a worker’s conversation from its subagent card.</p>
+<p>Pick one worker and open its conversation. Read through the conversation the same way you would read the main Antigravity conversation: check which files the worker inspected, what commands it ran, what assumptions it made, and whether it is writing the kind of CSV file the dashboard needs.</p>
+<p>You do not need to manage every step inside the worker thread. The parent agent is still coordinating the workflow, and you still control what gets accepted into the project. Reading a worker thread gives you visibility into the analysis while it is happening, and it gives you a chance to notice a wrong source file, a missing caveat, or an output shape that will be hard for the dashboard to use. If you see one of those problems, ask the parent to revise the worker assignment or review the worker output before integrating it.</p>
+<div class="note admonition">
+<p class="admonition-title">What to watch for</p>
+<p>The parent should ask workers for two deliverables: the analysis script and the CSV files written by that script. A prose summary can explain the result, but the dashboard needs the standalone files.</p>
+</div>
+</section>
+<section id="s3-multi-agent-workflows--use-the-outputs-in-the-dashboard">
+<h3>Use the Outputs in the Dashboard</h3>
+<p>Next, you will build a static dashboard (HTML, CSS, JavaScript) that reads data from the CSVs this step produced.</p>
+<p>The boundary is:</p>
+<ul class="simple">
+<li><p>analysis scripts define each calculation</p></li>
+<li><p>the scripts write CSV files</p></li>
+<li><p>CSV files are the dashboard inputs</p></li>
+<li><p>provenance notes explain how to interpret the CSV files</p></li>
+<li><p>dashboard code renders the reviewed outputs</p></li>
+</ul>
+<p>Ask Antigravity to make a new folder that contains only the data and scripts needed for the dashboard:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><code>We will make a static dashboard for this project next. From the existing Session 1 project root, create dashboard/. Copy the five reviewed data files into dashboard/dashboard_data/ and the scripts that generate them into dashboard/scripts/. Copy their provenance notes too. Keep the original scripts and raw data in place. Make the copied scripts read the original raw files from data/ in the project root and write their outputs to dashboard/dashboard_data/. Document the working directory and rerun commands. Do not place raw title samples, .venv, or this tutorial HTML in dashboard/.
+</code></pre></div>
+</div>
+<div class="key admonition">
+<p class="admonition-title">Key points</p>
+<ul class="simple">
+<li><p>The parent agent is the main Antigravity session coordinating the project.</p></li>
+<li><p>A subagent is a separate agent run assigned to a bounded task.</p></li>
+<li><p>Workers own separate analysis questions.</p></li>
+<li><p>Each worker deliverable is the analysis script plus the CSV files that script writes.</p></li>
+<li><p>Flash can be appropriate for worker tasks after the parent has tightly specified the contract.</p></li>
+<li><p>Machine-readable CSV files keep analysis outputs separate from visualization code and easier to reuse.</p></li>
+<li><p>Dashboard inputs should be reviewed before dashboard code depends on them.</p></li>
+</ul>
+</div>
+</section>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="building-datasets-with-antigravity.html" rel="prev"><span>Back</span><strong>Building Datasets with Antigravity</strong></a><a class="next" href="static-dashboard-prompts.html" rel="next"><span>Next</span><strong>Build and Deploy a Static Dashboard: Prompt Notes</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../assets/navigation.js"></script></body></html>

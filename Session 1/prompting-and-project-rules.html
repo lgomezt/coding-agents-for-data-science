@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 1: Foundations for AI-Assisted Analytics Work. Complete student tutorial adapted for Antigravity." name="description"/><title>Prompting and Project Rules · Session 1 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 1 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 1 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 1</summary><ol><li><a href="session-1-foundations.html">Overview</a></li><li><a href="setup.html">Start the course project</a></li><li><a href="coding-agents-for-analytics.html">Coding Agents for Analytics Work</a></li><li><a aria-current="page" href="prompting-and-project-rules.html">Prompting and Project Rules</a></li><li><a href="understanding-your-data.html">Understanding the Data Before Analysis</a></li><li><a href="analyzing-trends-over-time.html">Planning and Running an Analysis</a></li><li><a href="context-and-token-management.html">Managing Context in Coding Agent Conversations</a></li><li><a href="homework-keyword-analysis.html">Homework: Extend the Keyword Analysis</a></li><li><a href="session-1-qa.html">Session 1 Q&amp;A</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a class="active-session" href="../Session%201/session-1-foundations.html">Session 1</a><a href="../Session%202/session-2-reusable-skills.html">Session 2</a><a href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-1-foundations.html">Session 1</a></p><section class="chapter" id="s1-prompting-and-project-rules">
+<h1>Prompting and Project Rules</h1>
+<p>A <strong>prompt</strong> is an instruction or message given to an AI system. It can ask a question, request an action, provide context, point the AI toward specific files, or tell it what kind of output to produce. In this lesson, prompts are the messages you type in the Antigravity project conversation.</p>
+<p>Working with a coding agent is often iterative, especially at the beginning of a project. You ask for something, observe what the agent does, and then refine either the next prompt or the standing project instructions. The first prompt does not need to be perfect, but each response gives you evidence about what the agent needs to be told more explicitly.</p>
+<p>As the project develops, the interaction may become less repetitive. Once expectations are recorded in <code class="docutils literal notranslate">AGENTS.md</code> and the notebook contains more context, later prompts can often be shorter because Antigravity has more project guidance to work from.</p>
+<p>The wording of a prompt determines what Antigravity does for the immediate task. A project rules file determines how Antigravity should work across the project. In this lesson, we first observe what Antigravity does with broad and notebook-focused prompts, then turn those observations into starter rules in <code class="docutils literal notranslate">AGENTS.md</code>.</p>
+<section id="s1-prompting-and-project-rules--sessions-are-separate-contexts">
+<h3>Sessions are separate contexts</h3>
+<p>Each new Antigravity session starts a new conversation context. Antigravity does not automatically know what you discussed in a different session unless that information is available in the project files, analysis.ipynb, or the current conversation.</p>
+<p>This is useful when you are trying different things. For example, you might use one session to investigate the data, another session to revise project rules, and another session to work on a specific visualization. Separate sessions help keep those tasks from blurring together.</p>
+<p>The tradeoff is that context does not magically carry over. If a decision matters across sessions, record it somewhere durable: in the notebook, in <code class="docutils literal notranslate">AGENTS.md</code>, in a README, or in another project file. Treat the session as the working conversation and the project files as the shared memory.</p>
+<p>In the first part of this lesson, we intentionally try several prompts in
+different sessions. That makes the context boundary visible: each new session may need
+to inspect the repository and data again before it can answer well. That repeated
+orientation is not a mistake, but it is work we can reduce once the project
+starts to take shape. As the project develops, we can write important context
+into project files and record standing expectations in <code class="docutils literal notranslate">AGENTS.md</code>.</p>
+<p>The goal is not to prevent Antigravity from working quickly. The goal is to make sure its speed produces analysis that can be inspected, revised, and rerun. The workflow is:</p>
+<ul class="simple">
+<li><p>Try a prompt.</p></li>
+<li><p>Observe what Antigravity does.</p></li>
+<li><p>Identify what should be more reviewable.</p></li>
+<li><p>Record standing expectations in <code class="docutils literal notranslate">AGENTS.md</code>.</p></li>
+<li><p>Try again with those expectations in place.</p></li>
+</ul>
+</section>
+<section id="s1-prompting-and-project-rules--try-one-broad-prompt-before-rules">
+<h3>Try one broad prompt before rules</h3>
+<p>Start with a broad request before adding project rules. This makes Antigravity’s default behavior visible.</p>
+<div class="note"><p>Type the prompt in the Antigravity project conversation. You do not need to mention the agent by name.</p></div>
+<p>In the Antigravity project conversation, enter:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>I need to do exploratory data analysis on the data in my data folder. Can you investigate and tell me about it?
+</code></pre></div>
+</div>
+<p>Watch what Antigravity does before evaluating the answer. Note whether it writes reusable notebook code, works in the terminal, summarizes in the response, creates files, or makes assumptions about the data.</p>
+</section>
+<section id="s1-prompting-and-project-rules--what-codex-did">
+<h3>What Antigravity did</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because coding agents use LLMs and can choose different valid paths through a task, your run may not match this sequence exactly. You may see different commands, a different order of operations, or slightly different wording in the final response. The important pattern is whether Antigravity leaves behind work that is easy to inspect and rerun.</p>
+</div>
+<p>Your agent should inspect the project structure and the files in <code>data/</code>. The order may vary, but it should find three CSVs:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>combined_checkout_totals_by_month_usageclass.csv
+digital_checkout_title_sample_balanced_250k.csv
+physical_checkout_title_sample_balanced_250k.csv
+</code></pre></div>
+</div>
+<p>Antigravity might run file and environment checks, including commands such as:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>pwd
+List data
+Read digital_checkout_title_sample_balanced_250k.csv
+Read physical_checkout_title_sample_balanced_250k.csv
+Read combined_checkout_totals_by_month_usageclass.csv
+wc -l data/*.csv
+</code></pre></div>
+</div>
+<p>It then might write and execute Python code in the terminal to compute:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>dataset shapes
+columns and dtypes
+missingness
+date ranges
+usageclass counts
+checkouttype counts
+materialtype counts
+checkout summaries
+top creators
+top publishers
+top titles
+top subject tokens
+rows by year
+yearly totals and shares
+</code></pre></div>
+</div>
+</section>
+<section id="s1-prompting-and-project-rules--what-codex-reported">
+<h3>What Antigravity reported</h3>
+<p>Your output should include these dataset facts:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>combined_checkout_totals_by_month_usageclass.csv: 501 rows, monthly aggregate data from April 2005 through April 2026.
+digital_checkout_title_sample_balanced_250k.csv: 250,000 sampled digital title-month rows.
+physical_checkout_title_sample_balanced_250k.csv: 250,000 sampled physical title-month rows.
+</code></pre></div>
+</div>
+<p>It might also surface findings such as:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Physical checkouts dominated from 2005 through 2019.
+Digital grew gradually and became the majority in 2020.
+The two title-level files are balanced samples, not full raw extracts.
+The aggregate file should be used for full checkout volume trends.
+</code></pre></div>
+</div>
+</section>
+<section id="s1-prompting-and-project-rules--what-this-demonstrates">
+<h3>What this demonstrates</h3>
+<p>Antigravity may do a lot from a vague prompt. That is useful for quick orientation, but the work may not be very traceable. Much of the analysis may happen in temporary terminal code, and the final output may be a response summary rather than a reusable notebook artifact.</p>
+<p>The broad prompt is useful here as a teaching demonstration, but it is not the most efficient way to work. It may spend tokens on a wide scan, a long summary, or analysis steps that do not become part of the notebook. The request also did not specify where the work should be recorded, ask Antigravity to keep the code simple, explain the data structure before interpreting trends, or leave behind a notebook section that another person could review.</p>
+</section>
+<section id="s1-prompting-and-project-rules--try-a-notebook-prompt">
+<h3>Try a notebook prompt</h3>
+<p>Next, ask Antigravity to put the investigation into the notebook:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Can you help me investigate the data in my data folder? I would like to know what the dataset or datasets are and the relationships between the items.
+
+Please edit analysis.ipynb in this project. Add a brief Data Inventory section that previews each file, summarizes the rows and columns, and explains what one row seems to represent.
+</code></pre></div>
+</div>
+<p>This prompt demonstrates a capability that response summaries do not show: Antigravity can edit the notebook itself, adding code cells and explanatory text instead of only answering in the terminal.</p>
+<p>For this activity, the desired notebook shape is intentionally basic: a short
+markdown setup, a code cell that previews the data files, a compact summary
+table, and a few cautions about interpretation. The prompt does not spell all of
+that out, so the class can observe whether Antigravity makes reasonable choices or
+adds too much.</p>
+<p>It also gives us something important to inspect: the kind of notebook code Antigravity might write before we give it project rules. Even with this basic request, the code may run correctly but still be difficult to review. For example, Antigravity may combine several analytical steps into one compact pandas expression, use helper columns without explaining them, or write more explanation than the notebook needs.</p>
+<p>You may also see Antigravity do substantial profiling in the terminal before it edits
+the notebook. That can be useful scratch work, but it is a problem if the
+important reasoning only appears in terminal output or a response summary. For this course, the
+durable artifacts should be the notebook and project files. If Antigravity keeps
+rediscovering the same dataset facts in scratch commands, that is a signal to
+write those facts down where future sessions can find them.</p>
+<p>However, this prompt still leaves important interpretation questions implicit. It asks about “datasets” and “relationships,” but it does not explicitly require Antigravity to answer:</p>
+<ul class="simple">
+<li><p>What does one row represent?</p></li>
+<li><p>What is being counted?</p></li>
+<li><p>Is each file sampled, aggregated, or complete?</p></li>
+<li><p>What would be misleading to infer from each file?</p></li>
+</ul>
+<p>The narrower prompts improve the immediate task, but they do not solve the whole workflow problem. We still need project rules that tell Antigravity what reviewable notebook code should look like and require it to clarify the data structure before analysis.</p>
+<p>These first prompts motivate the need for rules. We do not need to wait until the notebook is messy to define expectations. After observing Antigravity with broad and narrower prompts, we can already see that it needs guidance about simple code, traceable work, and understanding the data structure before analysis.</p>
+<div class="exercise admonition">
+<p class="admonition-title">Exercise: Draft rules from observation</p>
+<p>Review what Antigravity did across your first prompts. Draft three rules that would make its analytics work easier to inspect, revise, or rerun.</p>
+<p>For each rule, write down the observation that motivated it. For example:</p>
+<ul class="simple">
+<li><p>Observation: Antigravity answered in the terminal but did not leave notebook code.</p></li>
+<li><p>Rule: Put investigation code and short explanations in analysis.ipynb.</p></li>
+</ul>
+<p>Keep the rules short. You will compare them with the starter <code class="docutils literal notranslate">AGENTS.md</code> rules in the next section.</p>
+</div>
+</section>
+<section id="s1-prompting-and-project-rules--show-how-agents-md-works">
+<h3>Show how AGENTS.md works</h3>
+<p><code class="docutils literal notranslate">AGENTS.md</code> is a project instruction file: a plain Markdown file that lives in
+the project folder and gives coding agents standing instructions for how to work
+in that project. It is not a Python file, a notebook file, or a data file. It is
+also not unique to this dataset; it is an <a class="reference external" href="https://agents.md/">AGENTS.md convention</a>
+used by coding-agent tools to find project-specific guidance.</p><p>Antigravity supports a root <code>AGENTS.md</code> file, so this exercise keeps the original project-rule format. Create it in <code>Session 1</code>, next to this guide. It needs no YAML frontmatter. See the <a href="https://antigravity.google/docs/rules">Antigravity rules documentation</a>.</p>
+<p>In this workshop, we use <code class="docutils literal notranslate">AGENTS.md</code> to tell Antigravity how to handle analytics work
+in this repository. Once Antigravity has been asked to write in a notebook during a
+session, it may continue doing that within the same conversation. But if
+notebook-based, traceable analysis is an expectation for the whole project, we do
+not want to retype that instruction at the start of every new session. <code class="docutils literal notranslate">AGENTS.md</code>
+gives us a place to record those standing expectations so they can be loaded
+automatically.</p>
+<p>Create a file called <code class="docutils literal notranslate">AGENTS.md</code> and use a temporary rule to make the instruction
+mechanism visible. Add this section to <code class="docutils literal notranslate">AGENTS.md</code>:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><code>## Response Style Test
+
+Answer in haiku.
+</code></pre></div>
+</div>
+<p>In Antigravity, create a new conversation in the same project.</p>
+<p>Ask Antigravity a simple question and observe whether the response changes. If the response is formatted as a haiku, the project rules are reaching the agent.</p>
+<p>Then remove the haiku rule. The haiku test is not part of the analytics workflow; it simply shows that Antigravity is reading project instructions.</p>
+<div class="warning admonition">
+<p class="admonition-title">Start a new session after changing AGENTS.md</p>
+<p>After changing <code class="docutils literal notranslate">AGENTS.md</code>, start a new Antigravity session before testing the new rule. Existing sessions may already have loaded the previous instructions. Starting a new session is the clearest way to make sure Antigravity reads the updated file. This is another example of the same context principle: a new session starts fresh, then loads the current project instructions.</p>
+</div>
+</section>
+<section id="s1-prompting-and-project-rules--add-first-round-agents-md-rules">
+<h3>Add first-round AGENTS.md rules</h3>
+<p>Now replace the temporary rule with a small set of non-negotiable rules for analytics work. You will add your own rules as you observe the agent's work.</p>
+<p>After updating <code class="docutils literal notranslate">AGENTS.md</code>, start a new Antigravity session again so the starter analytics rules are loaded for the next prompt.</p>
+<p>Update <code class="docutils literal notranslate">AGENTS.md</code> with the starter rules below, and fill in the Python experience level for your audience.</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><code># AGENTS.md
+
+## Purpose
+
+This project is for an AI-assisted analytics workflow.
+
+We are using Antigravity to help investigate data, write Python code, create notebook explanations, and build reproducible analysis artifacts.
+
+## Audience and Experience Level
+
+Notebook code should be written for a student with one semester of Python
+experience. Use explicit, step-by-step pandas code with descriptive intermediate
+variables. Avoid compact idioms, dense method chaining, and unexplained
+reshaping or aggregation shortcuts.
+
+## Non-Negotiable Rules
+
+1. Treat the notebook as the durable analysis record, not as a full transcript of scratch work. For accepted analysis, write the code, outputs, checks, and short explanations needed to understand and rerun the result.
+
+2. Inspect actual files and data before making claims, but do not repeatedly re-investigate the same data when the notebook already contains sufficient evidence.
+
+3. If a new question depends on information not yet established in the notebook, add only the minimal new inspection needed to answer it.
+
+4. Do not run separate terminal or scratch Python analysis to preview, verify, or compute results that belong in the accepted notebook analysis. Terminal commands may execute the saved notebook and perform non-analytical maintenance, such as file existence checks, notebook structure checks, and environment checks. Save notebook outputs after execution; do not duplicate the analysis in separate scratch commands.
+
+5. Do not modify raw data files.
+
+6. Do not duplicate accepted analysis work. If a table, chart, statistic, join, data profile, or interpretation will support a notebook claim, compute it in the notebook only.
+
+7. Make transformations explicit, readable, and rerunnable.
+
+8. Do not invent column names, file names, metadata, or dataset meanings.
+
+9. Keep the notebook clean. Include durable inspection, analysis, transformations, checks, outputs, and short explanations that support the work. Do not include irrelevant experiments, repeated previews, or exploratory dead ends unless they explain an important decision.
+
+10. Before creating plots or interpreting trends, identify what one row represents, what value is being counted or aggregated, and whether the data is sampled, aggregated, or complete.
+</code></pre></div>
+</div>
+<p><code class="docutils literal notranslate">AGENTS.md</code> applies to the whole project and is loaded automatically when a new agent session starts. A prompt shapes the immediate task; <code class="docutils literal notranslate">AGENTS.md</code> records the standing instructions you want Antigravity to carry into each new task in this project.</p>
+<div class="exercise admonition">
+<p class="admonition-title">Exercise: Add and test your own rule</p>
+<p>Add one small rule to <code class="docutils literal notranslate">AGENTS.md</code> that would make Antigravity’s notebook work easier for you to review. Start a new Antigravity session, then ask Antigravity a short question or revision request that should reveal whether the rule is being followed.</p>
+<p>After testing, decide whether to keep, revise, or remove the rule.</p>
+</div>
+<p>With the starter rules in place, the next step is to ask Antigravity to create the first serious notebook artifact: an investigation of what the data represents.</p>
+<div class="key admonition">
+<p class="admonition-title">Key points</p>
+<ul class="simple">
+<li><p>A prompt shapes the immediate task.</p></li>
+<li><p><code class="docutils literal notranslate">AGENTS.md</code> records standing project instructions that can load automatically in new agent sessions.</p></li>
+<li><p>Starter rules should respond to observed agent behavior, not abstract preferences.</p></li>
+<li><p>The broad prompt is useful because it shows why traceable notebook work and data-structure checks need to be explicit.</p></li>
+</ul>
+</div>
+</section>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="coding-agents-for-analytics.html" rel="prev"><span>Back</span><strong>Coding Agents for Analytics Work</strong></a><a class="next" href="understanding-your-data.html" rel="next"><span>Next</span><strong>Understanding the Data Before Analysis</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../assets/navigation.js"></script></body></html>

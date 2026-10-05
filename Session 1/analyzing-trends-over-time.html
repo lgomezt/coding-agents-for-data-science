@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 1: Foundations for AI-Assisted Analytics Work. Complete student tutorial adapted for Antigravity." name="description"/><title>Planning and Running an Analysis · Session 1 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 1 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 1 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 1</summary><ol><li><a href="session-1-foundations.html">Overview</a></li><li><a href="setup.html">Start the course project</a></li><li><a href="coding-agents-for-analytics.html">Coding Agents for Analytics Work</a></li><li><a href="prompting-and-project-rules.html">Prompting and Project Rules</a></li><li><a href="understanding-your-data.html">Understanding the Data Before Analysis</a></li><li><a aria-current="page" href="analyzing-trends-over-time.html">Planning and Running an Analysis</a></li><li><a href="context-and-token-management.html">Managing Context in Coding Agent Conversations</a></li><li><a href="homework-keyword-analysis.html">Homework: Extend the Keyword Analysis</a></li><li><a href="session-1-qa.html">Session 1 Q&amp;A</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a class="active-session" href="../Session%201/session-1-foundations.html">Session 1</a><a href="../Session%202/session-2-reusable-skills.html">Session 2</a><a href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-1-foundations.html">Session 1</a></p><section class="chapter" id="s1-analyzing-trends-over-time">
+<h1>Planning and Running an Analysis</h1>
+<p>This page applies the preceding steps to a complete analysis question:</p>
+<blockquote>
+<div><p>How have physical and digital checkouts changed over time?</p>
+</div></blockquote>
+<p>It also shows how to use Antigravity for planning before implementation when the next analysis might require a library or visualization approach we have not already chosen.</p>
+<section id="s1-analyzing-trends-over-time--select-the-appropriate-file">
+<h3>Select the appropriate file</h3>
+<p>Determine which file can answer the question before writing a prompt. The dataset contains two title-level samples and one monthly aggregate. Overall borrowing volume over time is a question about totals, so it must use the 501-row aggregate file. The 250,000-row sample files describe patterns and do not represent total volume.</p>
+<p>This is the purpose of the previous investigation: knowing the structure of the data determines which file is correct. State the chosen dataset in the prompt.</p>
+</section>
+<section id="s1-analyzing-trends-over-time--run-the-analysis">
+<h3>Run the analysis</h3>
+<p>In the Antigravity project conversation, enter:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Using the monthly aggregate checkout dataset, analyze how physical and digital
+checkouts changed over time. Add traceable code and short explanations to the
+notebook. Include annual totals, a trend chart, and a note about any partial
+years.
+</code></pre></div>
+</div>
+<p>When Antigravity finishes, use the review checklist below before accepting the result.</p>
+<p>The prompt does not restate the requirements defined in <code class="docutils literal notranslate">AGENTS.md</code>, such as readable code and notebook output; those apply automatically. It specifies only what is particular to this task: the dataset, the required outputs, and the caveat to address.</p>
+</section>
+<section id="s1-analyzing-trends-over-time--expected-output">
+<h3>Expected output</h3>
+<p>Antigravity adds annual totals split by physical and digital, a trend chart across the full range, and the digital share over time. The data shows physical checkouts higher in the early years, digital checkouts increasing over time, and a crossover around 2020.</p>
+<p>The aggregate file runs through April 2026, so the final year is incomplete. If 2026 is summed and charted alongside full years, it will appear as a sharp decline because four months are compared against twelve. The analysis must flag the partial year. Confirm that Antigravity did so; if it did not, instruct it to add the note.</p>
+<div class="exercise admonition">
+<p class="admonition-title">Ask for a change on the chart</p>
+<p>Choose something you would like to see changed on the chart. This could have to do with font size, color, or style.</p>
+<p>Ask Antigravity to change your chart. Continue prompting until you are satisfied with the plot style.</p>
+</div>
+</section>
+<section id="s1-analyzing-trends-over-time--review-checklist">
+<h3>Review checklist</h3>
+<p>Review the output against the following:</p>
+<ul class="simple">
+<li><p>Did it use the aggregate file rather than a sample file?</p></li>
+<li><p>Did it state what one row represents before interpreting the data?</p></li>
+<li><p>Did it account for the partial 2026 year?</p></li>
+<li><p>Does each stated result correspond to specific code and output?</p></li>
+</ul>
+</section>
+<section id="s1-analyzing-trends-over-time--plan-a-new-visualization-before-implementing">
+<h3>Plan a new visualization before implementing</h3>
+<p>Not every prompt needs to ask Antigravity to make changes immediately. When the next step involves choosing an approach, a library, or a visualization type, use Antigravity as a planning partner first.</p>
+<blockquote>
+<div><p>Does the data show any seasonal patterns for checkouts over time?</p>
+</div></blockquote>
+<p>This question still uses the monthly aggregate file, but the best visualization is less obvious than a basic trend line. A heatmap, faceted chart, small multiples, or an interactive chart might each work. Before installing anything or adding notebook cells, ask Antigravity to discuss possible approaches:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>/plan I'd like to discuss investigating checkout seasonality over time for checkouts. I'm curious if
+there is any time of year where checkouts occur more or less often. How might we do that?
+Do not change files or install packages yet. Wait for my approval of the approach.</code></pre></div>
+</div>
+<p>In Antigravity, use /plan for this discussion and explicitly ask it to wait before implementation. Read the proposed plan before approving changes.</p>
+<p>Review the options before moving forward. The useful output is not just the name
+of a chart type; it should explain tradeoffs such as readability, complexity,
+whether the chart will render reliably in the notebook, and whether the code
+will be easy to review.</p>
+<p>If the recommendation is appropriate, then ask Antigravity to implement the chosen approach:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Use the recommended approach to add a simple, readable notebook section
+showing monthly checkout seasonality by usage class. Explain what the
+visualization shows and include one caveat.
+</code></pre></div>
+</div>
+<p>This demonstrates a different prompting pattern: discuss and decide first, then implement. That pattern is useful whenever the analysis goal is clear but the method is still uncertain.</p>
+</section>
+<section id="s1-analyzing-trends-over-time--apply-the-workflow-to-the-sample-data">
+<h3>Apply the workflow to the sample data</h3>
+<p>The aggregate file answers questions about totals. The title-level sample files answer more granular questions about titles, subjects, material types, and publishers. Select one such question and apply the same workflow:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>What material types dominate the digital vs physical samples?
+Which subjects appear most often in each sample?
+What titles or creators appear in both the digital and physical samples?
+How does publication year differ between digital and physical samples?
+</code></pre></div>
+</div>
+<p>Use a prompt that carries the same requirements:</p>
+<div class="exercise admonition">
+<p class="admonition-title">Individual activity: Investigate a sample-data question</p>
+<p>Choose one granular question about the title-level sample files, or write your own. Use this prompt template:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Help me investigate this question: [QUESTION]. Use the title-level sample
+files. Before analyzing, state what one row represents and what is being
+counted. Add traceable, readable code to the notebook with short explanations.
+End with one finding and one caveat.
+</code></pre></div>
+</div>
+<p>Write a short notebook summary with:</p>
+<ul class="simple">
+<li>the question you investigated</li>
+<li><p>the dataset used</p></li>
+<li><p>what one row represents</p></li>
+<li><p>the code or output that supports the finding</p></li>
+<li><p>one finding</p></li>
+<li><p>one caveat or uncertainty</p></li>
+<li><p>one thing Antigravity did well or poorly</p></li>
+</ul>
+</div>
+<p>These files are samples, not the complete collection. A finding describes the sample; any statement about the full collection is an inference. State which one applies.</p>
+<div class="exercise admonition" id="s1-analyzing-trends-over-time--subject-tag-stretch-exercise">
+<p class="admonition-title">Stretch exercise: Treat subject tags as a text-cleaning problem</p>
+<p>The title-level sample files include a <code class="docutils literal notranslate">subjects</code> field. This field can look
+simple at first, but it is a useful stretch case because a small profiling
+question can turn into a text-cleaning and interpretation problem.</p>
+<p>Start by asking Antigravity a narrow verification question:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Do the checked out materials have subject tags in any dataset? Check the raw
+CSV headers and report which files include the field.
+</code></pre></div>
+</div>
+<p>If the field exists, ask Antigravity to add a short notebook section:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Add a cell to the notebook that summarizes the subjects field for the digital
+and physical title-level sample files. Count the number of unique subject
+values in each dataset and show a small sample of values. Keep the code simple
+and explain any parsing assumptions.
+</code></pre></div>
+</div>
+<p>Review the result carefully. In this example, the digital and physical samples have
+very different unique subject counts. That difference should not be interpreted
+immediately as “physical has many more meaningful topics.” It may reflect
+metadata practices, compound subject strings, punctuation, separators,
+granularity, or the way the field was split.</p>
+<p>Use the surprising result to discuss method choice before implementing a larger
+analysis:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>The physical sample has far more unique subject values than the digital sample.
+This seems like a text-cleaning or lightweight NLP problem. Do not implement
+anything yet. What simpler libraries or methods could help us inspect whether
+these are near-duplicates, formatting variants, or genuinely granular subjects?
+</code></pre></div>
+</div>
+<p>The useful teaching point is the decision process. A library such as RapidFuzz
+can score string similarity, and scikit-learn can support TF-IDF comparisons or
+clustering, but neither one automatically solves the interpretation problem.
+The analyst still needs to decide how subjects should be parsed, normalized,
+reviewed, and possibly grouped.</p>
+<p>You can have the agent write a handoff prompt for a future agent:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Write a handoff prompt for another coding agent to investigate the subjects
+field as a keyword-analysis problem. The prompt should ask the agent to profile
+the field, compare raw and normalized unique counts, identify examples of
+near-duplicate subject values, recommend a simple method before using an LLM,
+and avoid large-scale canonicalization unless explicitly asked.
+</code></pre></div>
+</div>
+<p>Create a new conversation in the same Antigravity project and use this handoff prompt to perform the new analysis in a new notebook.</p>
+</div>
+</section>
+<section id="s1-analyzing-trends-over-time--summary">
+<h3>Summary</h3>
+<p>The workflow completes one full iteration of the cycle: an initial broad prompt produced results without an artifact; reviewing the output produced project rules; the data structure was established before analysis; and the correct file was used to answer the question with traceable code.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Run a prompt.
+Review what Antigravity did.
+Define rules early.
+Apply the rules while continuing the analysis.
+Add rules as further issues appear.
+Compare results before and after, and continue.
+</code></pre></div>
+</div>
+<div class="key admonition">
+<p class="admonition-title">Key points</p>
+<ul class="simple">
+<li><p>The aggregate file answers questions about total checkout volume.</p></li>
+<li><p>The title-level sample files answer more granular questions about titles, subjects, material types, and publishers.</p></li>
+<li><p>Antigravity can help compare analysis approaches before writing code or installing anything.</p></li>
+<li><p>A coding agent can do much of the analytical work, but the person interpreting the results must confirm that the output is understandable, reviewable, and traceable.</p></li>
+</ul>
+</div>
+</section>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="understanding-your-data.html" rel="prev"><span>Back</span><strong>Understanding the Data Before Analysis</strong></a><a class="next" href="context-and-token-management.html" rel="next"><span>Next</span><strong>Managing Context in Coding Agent Conversations</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../assets/navigation.js"></script></body></html>

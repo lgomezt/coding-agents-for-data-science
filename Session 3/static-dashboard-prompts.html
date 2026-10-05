@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 3: From Analysis to Dashboard. Complete student tutorial adapted for Antigravity." name="description"/><title>Build and Deploy a Static Dashboard: Prompt Notes · Session 3 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 3 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 3 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 3</summary><ol><li><a href="session-3-analysis-to-dashboard.html">Overview</a></li><li><a href="setup.html">Continue in the same project</a></li><li><a href="building-datasets-with-antigravity.html">Building Datasets with Antigravity</a></li><li><a href="multi-agent-workflows.html">Multi-Agent Workflows</a></li><li><a aria-current="page" href="static-dashboard-prompts.html">Build and Deploy a Static Dashboard: Prompt Notes</a></li><li><a href="open-dataset-starting-points.html">Open Dataset Starting Points</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a href="../Session%201/session-1-foundations.html">Session 1</a><a href="../Session%202/session-2-reusable-skills.html">Session 2</a><a class="active-session" href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-3-analysis-to-dashboard.html">Session 3</a></p><section class="chapter" id="s3-static-dashboard-prompts">
+<h1>Build and Deploy a Static Dashboard: Prompt Notes</h1>
+<p>These notes collect the prompts and deployment steps for the static dashboard lesson. The lesson follows <a class="reference internal" href="multi-agent-workflows.html#s3-multi-agent-workflows"><span class="doc">Multi-Agent Workflows</span></a>.</p>
+<p>See the GitLab Pages deployment example: <a class="reference external" href="https://dashboard-starter-with-examples-8c1afe.pages.oit.duke.edu/">dashboard-starter-with-examples-8c1afe.pages.oit.duke.edu</a></p>
+<section id="s3-static-dashboard-prompts--create-a-dashboard">
+<h3>Create a Dashboard</h3><p>Use <code>Session 1/dashboard/</code>, prepared in the previous lesson, as the working directory for the dashboard prompts. Keep the agent attached to the <code>Session 1</code> project so it can read its rules and skills. Save the website as <code>index.html</code> inside that dashboard folder.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Create a static dashboard website using plain HTML, CSS, and JavaScript that loads data directly at runtime from dashboard_data/digital_material_type_shares_by_year.csv, do not embed it; use Plotly.js to render exactly one interactive chart and one clearly written interesting finding derived from the CSV data, make the page responsive and visually polished.
+</code></pre></div>
+</div>
+<h4>Preview the page</h4><p>A page that loads CSVs with <code>fetch()</code> needs a local web server. After the agent creates the first chart, ask:</p><pre class="prompt"><code>Use the Session 1 .venv Python to start a local HTTP server bound to 127.0.0.1, serving Session 1/dashboard/ on an available port. Open the dashboard preview for me in the browser and keep the server running. Verify that its CSV loads, the chart renders, and the finding comes from that CSV. Report browser errors.</code></pre><p>Inspect the dashboard preview that Antigravity opens. This browser preview runs the website; use VS Code for your notebooks and Python files. Ask Antigravity to refresh the preview after each change below.</p></section>
+<section id="s3-static-dashboard-prompts--try-a-new-chart">
+<h3>Try a New Chart</h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Change to a stacked bar chart in Plotly.js
+</code></pre></div>
+</div>
+</section>
+<section id="s3-static-dashboard-prompts--try-a-new-library">
+<h3>Try a New Library</h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://plotly.com/javascript/">Plotly.js</a></p></li>
+<li><p><a class="reference external" href="https://echarts.apache.org/examples/en/index.html#chart-type-bar">Apache ECharts</a></p></li>
+<li><p><a class="reference external" href="https://leafletjs.com/examples.html">Leaflet</a></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Change to Apache Echarts
+</code></pre></div>
+</div>
+</section>
+<section id="s3-static-dashboard-prompts--try-the-bar-race-chart">
+<h3>Try the Bar Race Chart</h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Change to a bar race chart
+</code></pre></div>
+</div>
+</section>
+<section id="s3-static-dashboard-prompts--create-a-table">
+<h3>Create a Table</h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Create a table below the chart showing the most popular material type of each year using AG Grid Community 32
+</code></pre></div>
+</div>
+</section>
+<section id="s3-static-dashboard-prompts--create-a-new-data-visualization">
+<h3>Create a New Data Visualization</h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Create a new data visualization that loads data directly at runtime from dashboard_data/digital_top_sampled_titles_by_year.csv, do not embed it; render exactly one interactive chart and one clearly written interesting finding derived from the CSV data. Adds it below the exisitng ones.
+</code></pre></div>
+</div>
+</section>
+<section id="s3-static-dashboard-prompts--create-a-subagent">
+<h3>Create a Subagent</h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Create a repo-local subagent definition for CSV data visualization work, saved as .agents/agents/csv-data-visualization.md relative to the Session 1 project root (outside dashboard/), with YAML frontmatter containing name: csv-data-visualization, description: Build and verify a static visualization from a CSV, and model: flash. Keep the task instructions below the frontmatter. The subagent should accept a CSV path and output location, inspect the CSV schema first, build a static responsive HTML/CSS/JS visualization, load the CSV directly at runtime with fetch() and never embed data or derived full datasets, use a browser visualization library such as Plotly.js, Apache ECharts, AG Grid Community 32 for tables, or Leaflet for map-style views, render exactly one interactive chart or requested table, compute exactly one clear finding from the runtime-loaded CSV, keep edits scoped to the requested output files, and verify syntax plus confirm the CSV is referenced rather than embedded.
+</code></pre></div>
+</div>
+</section>
+<section id="s3-static-dashboard-prompts--use-data-viz-accessibility-skill">
+<h3>Use Data Viz Accessibility Skill</h3><p>Install the <a href="https://gitlab.oit.duke.edu/jhc36/data-viz-accessibility/-/blob/main/SKILL.md">public Duke data-viz-accessibility skill</a> used for this audit. Read its instructions, then run this command from <code>Session 1</code>, the Antigravity project root. If needed, follow the introductory tutorial's <a href="../Antigravity%20Tutorial/working-with-coding-agents.html#node-setup">Node.js setup instructions</a>.</p><pre><code>npx skills add https://gitlab.oit.duke.edu/jhc36/data-viz-accessibility.git --skill data-viz-accessibility --agent antigravity --copy</code></pre><p>Confirm that <code>.agents/skills/data-viz-accessibility/SKILL.md</code> exists. Start a new conversation in the same Session 1 project so Antigravity discovers it. Tell the agent that the dashboard is in <code>dashboard/</code>, then send:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>/data-viz-accessibility audit the dashboard in dashboard/
+</code></pre></div>
+</div>
+</section>
+<section id="s3-static-dashboard-prompts--deploy-on-gitlab-pages">
+<h3>Deploy on GitLab Pages</h3>
+<section id="s3-static-dashboard-prompts--set-up-ssh-key">
+<h4>Set Up SSH Key</h4>
+<p>Ensure you have an SSH key added to your GitLab account. The commands below use <code>gitlab.com</code>; use your own GitLab host if it differs. Duke users can use their institutional account at <a class="reference external" href="https://gitlab.oit.duke.edu/">Duke OIT GitLab</a> and substitute <code>gitlab.oit.duke.edu</code>. If you already have a key, continue to the check below. If not, do the following:</p>
+<ol class="arabic simple">
+<li><p>Generate an SSH public/private key pair on your laptop as explained in the <a class="reference external" href="https://docs.gitlab.com/user/ssh/#generate-an-ssh-key-pair">GitLab SSH documentation</a>.</p></li>
+<li><p>Upload the public half of that key pair to your GitLab account as explained in the <a class="reference external" href="https://docs.gitlab.com/user/ssh/#add-an-ssh-key-to-your-gitlab-account">add an SSH key documentation</a>.</p></li>
+</ol>
+<p>To check if you have set up your SSH key successfully, use the following command in your terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><code>ssh -T git@gitlab.com
+</code></pre></div>
+</div>
+<p>You should see the following message, with your GitLab username filled in for <code>USERNAME</code>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Welcome to GitLab, @USERNAME!
+</code></pre></div>
+</div>
+</section>
+<section id="s3-static-dashboard-prompts--set-up-the-repository">
+<h4>Set Up the Repository</h4><p>Run this section from <code>Session 1/dashboard/</code>. Check that it contains only the dashboard assets, derived CSVs, generation scripts, and provenance notes before committing.</p>
+<ol class="arabic simple">
+<li><p>Move <code>index.html</code>, <code>index.css</code>, any JavaScript files used by the page, and <code>dashboard_data/</code> into a <code>public/</code> folder.</p></li>
+<li><p>Create a new empty repository.</p></li>
+<li><p>Fill in the form. Make sure the <code class="docutils literal notranslate">README.md</code> option is not selected.</p></li>
+<li><p>Add a new origin. Replace <code>YOUR-NAMESPACE/mydashboard.git</code> with the SSH repository path shown by your GitLab project, and replace the host if you use an institutional GitLab instance. Run these commands in the new dashboard folder.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><code>git init --initial-branch=main
+git remote add origin2 git@gitlab.com:YOUR-NAMESPACE/mydashboard.git
+git add public/ scripts/
+git diff --cached --stat
+git commit -m "Initial commit"
+git push --set-upstream origin2 main
+</code></pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Refresh the GitLab repository and confirm that you can see your code.</p></li>
+</ol>
+</section>
+<section id="s3-static-dashboard-prompts--set-up-gitlab-pages">
+<h4>Set Up GitLab Pages</h4>
+<ol class="arabic simple">
+<li><p>Visit <strong>Settings → General → Visibility, project features, permissions</strong>.</p></li>
+<li><p>Make sure the GitLab Pages setting is on.</p></li>
+<li><p>Go to <strong>Deploy → Pages</strong> and start the Pages setup. Configure the generated <code>.gitlab-ci.yml</code> with the following settings. You can also create this file at the repository root in GitLab’s editor. The pipeline needs an available GitLab runner.</p></li>
+</ol>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><code>image: alpine:latest
+
+create-pages:
+  stage: deploy
+  script:
+    - echo "Deploying static assets..."
+  pages: true
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+</code></pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Commit the <code>.gitlab-ci.yml</code> file. If your GitLab Pages setup opens a merge request, review and merge it into <code>main</code>.</p></li>
+<li><p>Check the pipeline under <strong>Build → Pipelines</strong>.</p></li>
+<li><p>View the pipeline and see it run.</p></li>
+<li><p>When the pipeline succeeds, visit the deployment link under <strong>Deploy → Pages</strong>.</p></li>
+<li><p>Confirm that the dashboard is deployed.</p></li>
+</ol>
+</section>
+</section>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="multi-agent-workflows.html" rel="prev"><span>Back</span><strong>Multi-Agent Workflows</strong></a><a class="next" href="open-dataset-starting-points.html" rel="next"><span>Next</span><strong>Open Dataset Starting Points</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../assets/navigation.js"></script></body></html>

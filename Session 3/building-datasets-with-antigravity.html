@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 3: From Analysis to Dashboard. Complete student tutorial adapted for Antigravity." name="description"/><title>Building Datasets with Antigravity · Session 3 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 3 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 3 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 3</summary><ol><li><a href="session-3-analysis-to-dashboard.html">Overview</a></li><li><a href="setup.html">Continue in the same project</a></li><li><a aria-current="page" href="building-datasets-with-antigravity.html">Building Datasets with Antigravity</a></li><li><a href="multi-agent-workflows.html">Multi-Agent Workflows</a></li><li><a href="static-dashboard-prompts.html">Build and Deploy a Static Dashboard: Prompt Notes</a></li><li><a href="open-dataset-starting-points.html">Open Dataset Starting Points</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a href="../Session%201/session-1-foundations.html">Session 1</a><a href="../Session%202/session-2-reusable-skills.html">Session 2</a><a class="active-session" href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-3-analysis-to-dashboard.html">Session 3</a></p><section class="chapter" id="s3-building-datasets-with-codex">
+<h1>Building Datasets with Antigravity</h1>
+<p>Analysis datasets rarely arrive in exactly the shape you need. A useful dataset is designed: an analyst decides what questions the data should support, what level of detail is needed, what tradeoffs are acceptable, and how the finished files should be regenerated and checked.</p>
+<p>Antigravity can help with that work, but it should not replace the analyst’s judgment. Use Antigravity to inspect sources, write retrieval scripts, create repeatable transformations, and validate outputs. Keep the analyst responsible for the questions, definitions, caveats, and claims the dataset should support.</p>
+<p>This lesson uses the Seattle Public Library checkout data as a running example, but the workflow applies to many public datasets.</p>
+<section id="s3-building-datasets-with-codex--objectives">
+<h3>Objectives</h3>
+<ul class="simple">
+<li><p>explain why dataset building starts with analysis questions</p></li>
+<li><p>inspect a public data source before downloading it</p></li>
+<li><p>distinguish complete aggregate files from sampled detail files</p></li>
+<li><p>choose a sampling strategy based on the claims the dataset should support</p></li>
+<li><p>use Antigravity to write a reproducible dataset-building script</p></li>
+<li><p>define validation checks and documentation before a dataset is ready for analysis</p></li>
+</ul>
+</section>
+<section id="s3-building-datasets-with-codex--start-with-analysis-questions">
+<h3>Start With Analysis Questions</h3>
+<p>The first dataset design decision is not how to download the data. It is what the dataset needs to help analysts answer.</p>
+<p>For example, a checkout dataset might support questions like:</p>
+<ul class="simple">
+<li><p>How have digital and physical checkout totals changed over time?</p></li>
+<li><p>What kinds of titles, material types, or subjects appear in each checkout format?</p></li>
+<li><p>How did the mix of materials change across years?</p></li>
+</ul>
+<p>Those questions require different kinds of files. Total checkout volume needs complete aggregate data. Material mix can often be explored with a sampled detail file. If the dataset tries to do everything in one file, it may become too large, too slow, or too easy to misinterpret.</p>
+<div class="tip admonition">
+<p class="admonition-title">Analyst responsibility</p>
+<p>Antigravity can help inspect a source and write retrieval code, but the analyst has to define the questions, acceptable tradeoffs, row meaning, and claims the dataset should support.</p>
+</div>
+</section>
+<section id="s3-building-datasets-with-codex--find-the-working-data-access-point">
+<h3>Find the Working Data Access Point</h3>
+<p>After defining the analysis need, identify how software can access the source. Public data may be available as a direct download, database export, API endpoint, bulk ZIP file, or query service.</p>
+<div class="note admonition">
+<p class="admonition-title">What is an API?</p>
+<p>An <strong>API</strong>, or application programming interface, is a structured way for software to request information from another system. For a public dataset, an API endpoint is often a URL that returns data a script can query, filter, and save.</p>
+</div>
+<p>In the Seattle example, the working public endpoint was:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>https://data.seattle.gov/resource/tmmm-ytt6.json
+</code></pre></div>
+</div>
+<p>You can find the source dataset page for Seattle Public Library checkouts <a class="reference external" href="https://data.seattle.gov/Community-and-Culture/Checkouts-by-Title/tmmm-ytt6/about_data">on Seattle Open Data</a>. The source is <code class="docutils literal notranslate">tmmm-ytt6</code>, “Checkouts by Title.” It includes both <code class="docutils literal notranslate">Digital</code> and <code class="docutils literal notranslate">Physical</code> values in a <code class="docutils literal notranslate">usageclass</code> field, which made it a good fit for analyzing changing checkout patterns.</p>
+<div class="note admonition">
+<p class="admonition-title">Endpoint note</p>
+<p>Some data portals expose more than one URL pattern. The original Seattle link used the <code class="docutils literal notranslate">api/v3/views/.../query.json</code> pattern. For unauthenticated retrieval, the script used the public Socrata SODA resource endpoint instead: <code class="docutils literal notranslate">https://data.seattle.gov/resource/tmmm-ytt6.json</code>. Confirm the working public endpoint before asking Antigravity to write retrieval code.</p>
+</div>
+</section>
+<section id="s3-building-datasets-with-codex--inspect-the-source-before-downloading">
+<h3>Inspect the Source Before Downloading</h3>
+<p>Before pulling a large dataset, ask Antigravity to inspect what the source represents. The important questions are structural:</p>
+<ul class="simple">
+<li><p>What does one source row represent?</p></li>
+<li><p>Is the source already aggregated, or is it row-level event data?</p></li>
+<li><p>What time span does it cover?</p></li>
+<li><p>Which fields are available for filtering, grouping, or sorting?</p></li>
+<li><p>How large is the source?</p></li>
+<li><p>Can the endpoint support server-side filters or grouped queries?</p></li>
+</ul>
+<p>In the Seattle source, one row is not one checkout. The source is already aggregated: one row represents a title/material/usage-class/month combination, with a <code class="docutils literal notranslate">checkouts</code> count.</p>
+<p>That row meaning changes the analysis. If a row has <code class="docutils literal notranslate">checkouts = 47</code>, it is a title-month record summarizing 47 checkouts for that combination. Treating that row as one checkout would undercount activity and distort any interpretation of volume.</p>
+</section>
+<section id="s3-building-datasets-with-codex--design-the-output-files">
+<h3>Design the Output Files</h3>
+<p>Once the source is understood, design the smaller files analysts will actually use. This is where the analysis questions become file contracts. You can work with Antigravity to establish this based on the available data and questions you want to ask.</p>
+<div class="pst-scrollable-table-container"><div class="table-wrap"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Question type</p></th>
+<th class="head"><p>Example</p></th>
+<th class="head"><p>Useful output file</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Volume</p></td>
+<td><p>How did digital and physical checkout totals change over time?</p></td>
+<td><p>Complete aggregate totals</p></td>
+</tr>
+<tr class="row-odd"><td><p>Composition</p></td>
+<td><p>What kinds of titles, material types, or subjects appear in each checkout format?</p></td>
+<td><p>Sampled detail records</p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>For the Seattle data, this led to a three-file design:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>data/
+  combined_checkout_totals_by_month_usageclass.csv
+  digital_checkout_title_sample_balanced_250k.csv
+  physical_checkout_title_sample_balanced_250k.csv
+  README.md
+</code></pre></div>
+</div>
+<p>The totals file preserves complete monthly counts by <code class="docutils literal notranslate">usageclass</code>. The two sample files provide manageable title/month records for digital and physical exploration. The sample files have the same structure because they come from the same source and were split by <code class="docutils literal notranslate">usageclass</code> after retrieval.</p>
+</section>
+<section id="s3-building-datasets-with-codex--choose-a-sampling-strategy">
+<h3>Choose a Sampling Strategy</h3>
+<p>Sampling is not just a file-size trick. A sampling strategy changes what claims analysts can make.</p>
+<p>Sampling was necessary for the Seattle title/month records because the source contained too many rows to package in a normal repository or load during a short exercise. The design keeps the monthly totals complete, because those files are small after aggregation. It samples the title-level detail records, because that is the part of the source that is too large to distribute directly.</p>
+<p>Several sampling strategies could support different goals:</p>
+<ul class="simple">
+<li><p><strong>Most recent rows</strong>: useful for current-state inspection, weak for historical comparisons.</p></li>
+<li><p><strong>Simple fixed-size sample</strong>: easy to create, but may overrepresent high-volume periods or common groups.</p></li>
+<li><p><strong>Proportional sample</strong>: useful when the sample should resemble the full source population.</p></li>
+<li><p><strong>Balanced sample by year</strong>: useful when analysts need enough rows from each year for comparison.</p></li>
+<li><p><strong>Separate balanced samples by group</strong>: useful when comparing groups that have very different source volumes.</p></li>
+</ul>
+<p>For the Seattle data, the final choice was a balanced sample by year and usage class:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>2006-2025
+20 complete years
+250,000 Digital rows
+250,000 Physical rows
+12,500 rows per year per usageclass
+</code></pre></div>
+</div>
+<p>The sample is balanced at the year and usage-class level, not at the month level. Each year gets 12,500 Digital rows and 12,500 Physical rows. Within that year, months with more source rows get more sampled rows than months with fewer source rows. For example, if July has twice as many title/month records as February for Physical checkouts in a given year, July receives about twice as many rows in that year’s Physical sample.</p>
+<p>The script also makes the sample method repeatable. Running the script again should apply the same year range, group definitions, and sampling rules, rather than creating an undocumented one-off extract.</p>
+<p>Balanced sampling fit this workflow because analysts can compare patterns across years. A proportional sample would represent the overall source population more directly, but high-volume years would dominate the sample and lower-volume years would have fewer rows for comparison. The complete totals file preserves real volume, so the sample can focus on composition.</p>
+<div class="note admonition">
+<p class="admonition-title">Sampling tradeoff</p>
+<p>A balanced-by-year sample is useful for comparing composition across years. A proportional sample is useful for estimating the overall source population. The right choice depends on the question the dataset should support.</p>
+</div>
+</section>
+<section id="s3-building-datasets-with-codex--ask-codex-for-a-reproducible-builder">
+<h3>Ask Antigravity for a Reproducible Builder</h3>
+<p>Once the dataset design is clear, ask Antigravity for a script, not a one-time download. The script is the method. It should show the source endpoint, retrieval choices, filters, sampling design, output paths, and validation checks.</p>
+<p>The key prompt is not simply:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Download this data.
+</code></pre></div>
+</div>
+<p>A better prompt is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Write a reproducible script that creates these analysis files from this public
+endpoint. Use the approved file design, make the sampling method repeatable,
+write partial outputs safely, and validate the final row counts.
+</code></pre></div>
+</div>
+<p>The script should make the retrieval method visible without requiring analysts to repeat manual download steps. For the Seattle dataset, that meant querying the public endpoint, creating the approved aggregate and sample files, and writing outputs that matched the dataset design.</p>
+<div class="tip admonition">
+<p class="admonition-title">Why write a script?</p>
+<p>A script turns dataset retrieval into a reviewable method. Reviewers can inspect the source URL, retrieval choices, sampling design, output paths, retry behavior, and validation checks.</p>
+</div>
+</section>
+<section id="s3-building-datasets-with-codex--prompt-sequence">
+<h3>Prompt Sequence</h3>
+<p>Do not ask Antigravity to inspect the source, design the dataset, and build the script all at once. Break the work into stages so you can review the decisions before Antigravity writes code.</p>
+<p>First, ask Antigravity to inspect the source:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>I want to build a reproducible analysis dataset from [SOURCE].
+
+Inspect the source access pattern and metadata. Do not download the full dataset
+yet. Tell me:
+- what the source appears to contain
+- what one row represents
+- whether the source is row-level or already aggregated
+- what fields are available for filtering or grouping
+- how large the source appears to be
+</code></pre></div>
+</div>
+<p>Then ask for a dataset design:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Using what you found, recommend a dataset design for these analysis questions:
+- [QUESTION 1]
+- [QUESTION 2]
+- [QUESTION 3]
+</code></pre></div>
+</div>
+<p>After you approve the design, ask for the builder script:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Write a script that can regenerate the approved files.
+The script should use a repeatable retrieval method create a short README to accompany the script.
+</code></pre></div>
+</div>
+<p>This sequence separates source inspection, dataset design, and implementation.</p>
+</section>
+<section id="s3-building-datasets-with-codex--key-points">
+<h3>Key Points</h3>
+<div class="key admonition">
+<p class="admonition-title">Key points</p>
+<ul class="simple">
+<li><p>Dataset building starts with analysis questions, not downloading.</p></li>
+<li><p>Public data retrieval starts with source inspection.</p></li>
+<li><p>Row meaning determines what the dataset can and cannot support.</p></li>
+<li><p>Complete aggregate files and sampled detail files serve different purposes.</p></li>
+<li><p>Sampling strategy changes what claims analysts can make.</p></li>
+<li><p>A reproducible script makes the dataset method inspectable and rerunnable.</p></li>
+<li><p>Long-running downloads need partial-file handling, retries, and validation.</p></li>
+<li><p>Minimal documentation should explain source, files, row meaning, sampling, and retrieval method.</p></li>
+</ul>
+</div>
+</section>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="setup.html" rel="prev"><span>Back</span><strong>Continue in the same project</strong></a><a class="next" href="multi-agent-workflows.html" rel="next"><span>Next</span><strong>Multi-Agent Workflows</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../assets/navigation.js"></script></body></html>

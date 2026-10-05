@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 1: Foundations for AI-Assisted Analytics Work. Complete student tutorial adapted for Antigravity." name="description"/><title>Session 1 Q&amp;A · Session 1 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 1 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 1 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 1</summary><ol><li><a href="session-1-foundations.html">Overview</a></li><li><a href="setup.html">Start the course project</a></li><li><a href="coding-agents-for-analytics.html">Coding Agents for Analytics Work</a></li><li><a href="prompting-and-project-rules.html">Prompting and Project Rules</a></li><li><a href="understanding-your-data.html">Understanding the Data Before Analysis</a></li><li><a href="analyzing-trends-over-time.html">Planning and Running an Analysis</a></li><li><a href="context-and-token-management.html">Managing Context in Coding Agent Conversations</a></li><li><a href="homework-keyword-analysis.html">Homework: Extend the Keyword Analysis</a></li><li><a aria-current="page" href="session-1-qa.html">Session 1 Q&amp;A</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a class="active-session" href="../Session%201/session-1-foundations.html">Session 1</a><a href="../Session%202/session-2-reusable-skills.html">Session 2</a><a href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-1-foundations.html">Session 1</a></p><section class="chapter" id="s1-session-1-qa">
+<h1>Session 1 Q&amp;A</h1>
+<p>Use these answers when you apply the workflow to your own data.</p>
+<section id="s1-session-1-qa--how-do-i-analyze-my-own-data-with-codex">
+<h3>How do I analyze my own data with Antigravity?</h3>
+<p>Antigravity works with the folders attached to the selected project. Choose a Local conversation and confirm the working directory before asking it to inspect files, edit code, or run commands.</p>
+<p>To analyze your own data, make a project folder first. Put your data files in
+that folder, then add that folder to a new Antigravity project. A useful structure
+is to keep the raw data in its own folder and keep notebooks, scripts, project
+notes, and instructions one level above it:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>my-analysis-project/
+├── .venv/
+├── AGENTS.md
+├── README.md
+├── requirements.txt
+├── analysis.ipynb
+├── scripts/
+└── data/
+    ├── my_file.csv
+    └── another_file.xlsx
+</code></pre></div>
+</div>
+<p>This structure gives Antigravity a clear boundary: the project folder is the working
+space, and <code class="docutils literal notranslate">data/</code> is where the source files live. It also keeps analysis files
+from getting mixed into the raw data folder.</p>
+<p>For a separate analysis project, use the <a href="../Antigravity%20Tutorial/working-with-coding-agents.html#python-environment">Python setup prompt</a> in that project folder. Keep <code>requirements.txt</code> with the project so others can recreate its environment. If you use Git, commit that file and exclude <code>.venv/</code>.</p>
+</section>
+<section id="s1-session-1-qa--does-my-data-need-to-be-formatted-a-certain-way">
+<h3>Does my data need to be formatted a certain way?</h3>
+<p>For this course, the important question is not whether the data is formatted for
+an AI model. We are using AI-assisted programming for data analysis. That means
+Antigravity is helping you write and run code, and the code still needs to read your
+files through normal programming libraries.</p>
+<p>Your data will be easiest to analyze when it is in a regular, tabular format
+that tools like Python, pandas, R, Excel, Tableau, or databases can read
+reliably. CSV, Excel, Parquet, JSON, and database tables can all work, depending
+on the project. The key is consistency:</p>
+<ul class="simple">
+<li><p>one row should represent a consistent unit</p></li>
+<li><p>column names should be present and meaningful</p></li>
+<li><p>values in a column should have a consistent meaning</p></li>
+<li><p>dates, numbers, categories, and missing values should be represented
+consistently</p></li>
+<li><p>repeated tables, notes, merged cells, subtotals, and visual-only formatting
+should not be mixed into the analysis data</p></li>
+</ul>
+<p>If your data is not already consistent, do not overwrite the original file. Keep
+the raw data, create a cleaned or regularly formatted version, and save the code
+that performs the conversion.</p>
+<p>A useful project structure is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>my-analysis-project/
+├── AGENTS.md
+├── README.md
+├── analysis.ipynb
+├── scripts/
+│   └── prepare_data.py
+└── data/
+    ├── raw/
+    │   └── original_file.xlsx
+    └── processed/
+        └── analysis_ready_file.csv
+</code></pre></div>
+</div>
+<p>You can use Antigravity to help write the conversion script:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre class="prompt"><code>Please inspect data/raw/original_file.xlsx and write a script that converts it
+to a regular analysis-ready CSV in data/processed/. Preserve the raw file. Put
+the conversion code in scripts/prepare_data.py and document any assumptions.
+</code></pre></div>
+</div>
+<p>This gives you three things a reviewer can check: the original data, the
+analysis-ready data, and the script that explains how one became the other.</p>
+</section>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="homework-keyword-analysis.html" rel="prev"><span>Back</span><strong>Homework: Extend the Keyword Analysis</strong></a><a class="next" href="../Session%202/session-2-reusable-skills.html" rel="next"><span>Next</span><strong>Session 2</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../assets/navigation.js"></script></body></html>
