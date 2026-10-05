@@ -6,7 +6,7 @@ Start with [the Antigravity tutorial](Antigravity%20Tutorial/working-with-coding
 - [Session 2: Reusable skills](Session%202/session-2-reusable-skills.html)
 - [Session 3: Analysis to dashboard](Session%203/session-3-analysis-to-dashboard.html)
 
-Clone this repository, then open the HTML files in your browser. Each session has separate lesson pages with a left menu and Back/Next links. The pages work locally; you do not need a web server to read them.
+Each tutorial folder contains `data/`, one HTML file to open, and a `reference/` folder with the supporting pages or examples. Open the HTML file directly inside the folder, then follow the left menu and Back/Next links. The pages work locally; you do not need a web server to read them.
 
 ```sh
 git clone https://github.com/lgomezt/coding-agents-for-data-science.git

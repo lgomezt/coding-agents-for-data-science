@@ -240,12 +240,13 @@
   working-with-coding-agents.html
   data/
     library_visits.csv
-  examples/
-    economist-charts/
-      SKILL.md
-      resources/
-        chart-design-reference.html</code></pre>
-<p>The <code>examples</code> folder contains the comparison files used in the skills exercise. Scripts, results, and installed skills are not supplied; you will build them during the tutorial.</p>
+  reference/
+    examples/
+      economist-charts/
+        SKILL.md
+        resources/
+          chart-design-reference.html</code></pre>
+<p>The <code>reference/examples</code> folder contains the comparison files used in the skills exercise. Scripts, results, and installed skills are not supplied; you will build them during the tutorial.</p>
 <p>The selected folder and its subfolders are available to the agent, subject to the project's permissions. This does not read every file into the conversation. If a future project needs files elsewhere, use <strong>Add Folder</strong> in its project settings.</p>
 <h3 id="practice-data">Meet the practice data</h3>
 <p>Open <code>library_visits.csv</code> in the supplied <code>data</code> folder. It contains 13 fictional records for the Central and Riverside library branches from January to June 2025. Each row has a month, a branch, and a visit count. One record is repeated and one count is missing. You will inspect these issues before asking for a chart.</p>
@@ -374,8 +375,8 @@
 </li>
 <li>
 <h4>Inspect and compare your files</h4>
-<p>Open both files. Check the source links, tokens, font choices, and inaccessible-source notes. Confirm that the skill requires reading its reference and protects the data. Then compare your drafts with the finished <a href="examples/economist-charts/SKILL.md">example SKILL.md</a> and <a href="examples/economist-charts/resources/chart-design-reference.html">example design reference</a>. Use differences to revise your own work.</p>
-<p>The comparison files live under <code>examples/</code>, outside <code>.agents/skills/</code>, so they are not automatically installed. Your skill is the one you built in <code>.agents/skills/economist-charts/</code>.</p>
+<p>Open both files. Check the source links, tokens, font choices, and inaccessible-source notes. Confirm that the skill requires reading its reference and protects the data. Then compare your drafts with the finished <a href="reference/examples/economist-charts/SKILL.md">example SKILL.md</a> and <a href="reference/examples/economist-charts/resources/chart-design-reference.html">example design reference</a>. Use differences to revise your own work.</p>
+<p>The comparison files live under <code>reference/examples/</code>, outside <code>.agents/skills/</code>, so they are not automatically installed. Your skill is the one you built in <code>.agents/skills/economist-charts/</code>.</p>
 </li>
 <li>
 <h4>Restyle the existing line chart</h4><p>Start a new conversation in the same project so Antigravity discovers your saved skill. Then send:</p>
@@ -442,7 +443,7 @@
   working-with-coding-agents.html
   data/
     library_visits.csv
-  examples/                         (supplied comparison files)
+  reference/examples/               (supplied comparison files)
   project_notes.md
   requirements.txt
   .agents/skills/economist-charts/
@@ -476,7 +477,7 @@
 </table>
 </div>
 <div class="check"><p>Choose one number in your chart. Find the input rows and code that produced it, and explain how the cleaning decisions affected it. If you cannot, ask the agent to walk you through the saved files.</p></div>
-<p>Continue with <a href="../Session%201/setup.html#setup">Session 1</a> to create the Seattle library analysis project. You will keep that project, its data, and its environment through Sessions 2 and 3. The fictional practice analysis stays in <code>Antigravity Tutorial</code>.</p>
+<p>Continue with <a href="../Session%201/reference/setup.html#setup">Session 1</a> to create the Seattle library analysis project. You will keep that project, its data, and its environment through Sessions 2 and 3. The fictional practice analysis stays in <code>Antigravity Tutorial</code>.</p>
 </section>
 <section aria-labelledby="heading-reference" id="reference">
 <h2 id="heading-reference">Quick reference</h2>

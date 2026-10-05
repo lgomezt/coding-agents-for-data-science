@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 2: Context Management and Agent Skills. Complete student tutorial adapted for Antigravity." name="description"/><title>Agent Skills · Session 2 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
-<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 2 · Antigravity</span></div></header>
-<div class="layout"><nav aria-label="Session 2 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 2</summary><ol><li><a href="session-2-reusable-skills.html">Overview</a></li><li><a href="setup.html">Continue in the same project</a></li><li><a href="context-management-part-2.html">Context Management Part 2: Choose a Working File Format</a></li><li><a aria-current="page" href="agent-skills.html">Agent Skills</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a href="../Session%201/session-1-foundations.html">Session 1</a><a class="active-session" href="../Session%202/session-2-reusable-skills.html">Session 2</a><a href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
-<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-2-reusable-skills.html">Session 2</a></p><section class="chapter" id="s2-agent-skills">
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 2: Context Management and Agent Skills. Complete student tutorial adapted for Antigravity." name="description"/><title>Agent Skills · Session 2 | Coding Agents for Data Science</title><link href="../../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 2 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 2 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 2</summary><ol><li><a href="../session-2-reusable-skills.html">Overview</a></li><li><a href="setup.html">Continue in the same project</a></li><li><a href="context-management-part-2.html">Context Management Part 2: Choose a Working File Format</a></li><li><a aria-current="page" href="agent-skills.html">Agent Skills</a></li></ol><div class="sidebar-extra"><a href="../../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a href="../../Session%201/session-1-foundations.html">Session 1</a><a class="active-session" href="../session-2-reusable-skills.html">Session 2</a><a href="../../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="../session-2-reusable-skills.html">Session 2</a></p><section class="chapter" id="s2-agent-skills">
 <h1>Agent Skills</h1>
 <p>In Session 1, you used prompts and <code class="docutils literal notranslate">AGENTS.md</code> to shape how Antigravity worked in one project. In the previous lesson, you saw that the working file format also shapes the agent’s behavior.</p>
 <p>Skills solve a related problem: repeated instructions should not live only in the conversation.</p>
@@ -97,7 +97,7 @@ just what commands to run.
 <h3>Skill Effects</h3>
 <p>The same prompt can produce different outputs when different skills are active. In the deck example below, a project used skills to steer an AI art system connected to a physical drawing device. The prompt stayed the same, but the skill changed the method and style.</p>
 <figure class="align-default" id="s2-agent-skills--id1">
-<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-17.png"><img alt="Three line-art outputs produced from the same prompt using different skills: line art, algorithmic art, and Bauhaus art" src="../assets/example-bde97ea5d8e2.png"/>
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-17.png"><img alt="Three line-art outputs produced from the same prompt using different skills: line art, algorithmic art, and Bauhaus art" src="../../assets/example-bde97ea5d8e2.png"/>
 </a>
 <figcaption>
 <p><span class="caption-text">Skills can make the agent apply a specified method to the same request.</span></p>
@@ -127,7 +127,7 @@ rather than only as prompt text.</p>
 </section>
 <section id="s2-agent-skills--installing-or-creating-skills"><h3>Installing or Creating Skills</h3>
 <p>Some skills can be installed from a Git repository with <code>npx skills</code>:</p>
-<p>If <code>npx</code> is unavailable, use the <a href="../Antigravity%20Tutorial/working-with-coding-agents.html#node-setup">Node.js setup instructions</a> in the introductory tutorial.</p>
+<p>If <code>npx</code> is unavailable, use the <a href="../../Antigravity%20Tutorial/working-with-coding-agents.html#node-setup">Node.js setup instructions</a> in the introductory tutorial.</p>
 <p>Run the installation command from the <code>Session 1</code> project folder. Replace <code>SKILL_REPO</code> with the skill repository you reviewed:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><code>npx skills add SKILL_REPO --agent antigravity --copy
 </code></pre></div></div>
@@ -178,5 +178,5 @@ markers should be large and readable, and figures should not have titles.
 </ul>
 </div>
 </section>
-</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="context-management-part-2.html" rel="prev"><span>Back</span><strong>Context Management Part 2: Choose a Working File Format</strong></a><a class="next" href="../Session%203/session-3-analysis-to-dashboard.html" rel="next"><span>Next</span><strong>Session 3</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
-<script defer="" src="../assets/navigation.js"></script></body></html>
+</section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="context-management-part-2.html" rel="prev"><span>Back</span><strong>Context Management Part 2: Choose a Working File Format</strong></a><a class="next" href="../../Session%203/session-3-analysis-to-dashboard.html" rel="next"><span>Next</span><strong>Session 3</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
+<script defer="" src="../../assets/navigation.js"></script></body></html>

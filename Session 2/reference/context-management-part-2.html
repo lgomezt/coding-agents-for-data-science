@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 2: Context Management and Agent Skills. Complete student tutorial adapted for Antigravity." name="description"/><title>Context Management Part 2: Choose a Working File Format · Session 2 | Coding Agents for Data Science</title><link href="../assets/tutorial.css" rel="stylesheet"/></head><body>
-<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 2 · Antigravity</span></div></header>
-<div class="layout"><nav aria-label="Session 2 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 2</summary><ol><li><a href="session-2-reusable-skills.html">Overview</a></li><li><a href="setup.html">Continue in the same project</a></li><li><a aria-current="page" href="context-management-part-2.html">Context Management Part 2: Choose a Working File Format</a></li><li><a href="agent-skills.html">Agent Skills</a></li></ol><div class="sidebar-extra"><a href="../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a href="../Session%201/session-1-foundations.html">Session 1</a><a class="active-session" href="../Session%202/session-2-reusable-skills.html">Session 2</a><a href="../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
-<main id="main-content" tabindex="-1"><p class="page-context"><a href="session-2-reusable-skills.html">Session 2</a></p><section class="chapter" id="s2-context-management-part-2">
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="Session 2: Context Management and Agent Skills. Complete student tutorial adapted for Antigravity." name="description"/><title>Context Management Part 2: Choose a Working File Format · Session 2 | Coding Agents for Data Science</title><link href="../../assets/tutorial.css" rel="stylesheet"/></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="banner"><div class="banner-inner"><a class="course-name" href="../../Antigravity%20Tutorial/working-with-coding-agents.html">Coding Agents for Data Science</a><span class="banner-note">Session 2 · Antigravity</span></div></header>
+<div class="layout"><nav aria-label="Session 2 lessons" class="sidebar"><details class="lesson-menu" open=""><summary>In Session 2</summary><ol><li><a href="../session-2-reusable-skills.html">Overview</a></li><li><a href="setup.html">Continue in the same project</a></li><li><a aria-current="page" href="context-management-part-2.html">Context Management Part 2: Choose a Working File Format</a></li><li><a href="agent-skills.html">Agent Skills</a></li></ol><div class="sidebar-extra"><a href="../../Antigravity%20Tutorial/working-with-coding-agents.html">Antigravity tutorial</a><a href="../../Session%201/session-1-foundations.html">Session 1</a><a class="active-session" href="../session-2-reusable-skills.html">Session 2</a><a href="../../Session%203/session-3-analysis-to-dashboard.html">Session 3</a></div></details><p class="sidebar-caption">Follow the pages in order, or choose a lesson from the menu.</p></nav>
+<main id="main-content" tabindex="-1"><p class="page-context"><a href="../session-2-reusable-skills.html">Session 2</a></p><section class="chapter" id="s2-context-management-part-2">
 <h1>Context Management Part 2: Choose a Working File Format</h1>
 <p>Session 1 used a notebook because notebooks are a familiar interface for many analysts and learners. They make it easy to see code, outputs, and short explanations together while learning the agent-assisted workflow.</p>
 <p>Session 2 shifts from the notebook as a familiar learning interface to the working file as part of context management. When Antigravity performs repeated analysis work, the file format affects what the agent must read, edit, validate, execute, and inspect.</p>
@@ -26,7 +26,7 @@
 <p>To see why file format can affect token usage, first identify the unit of work being repeated. A single user request can require several model calls and tool calls before the final response. Each model call receives context, decides a next step, and may ask a tool to inspect, edit, run, or validate something in the project.</p>
 <p>An agent turn is more than a chat message. The model receives input, decides the next step, may call tools, receives tool results, and may repeat that loop before answering.</p>
 <figure class="align-default" id="s2-context-management-part-2--id1">
-<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-09.png"><img alt="Diagram of one agent turn showing user task, input context, model calls, tool calls, tool results, and final response" src="../assets/example-32a1d5c4904a.png"/>
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-09.png"><img alt="Diagram of one agent turn showing user task, input context, model calls, tool calls, tool results, and final response" src="../../assets/example-32a1d5c4904a.png"/>
 </a>
 <figcaption>
 <p><span class="caption-text">One user request can produce several model calls. Tool results from one call can become input to the next call.</span></p>
@@ -39,7 +39,7 @@
 <p>A Jupyter notebook is stored as JSON rather than as a simple script. An <code class="docutils literal notranslate">.ipynb</code> file can contain code, markdown, outputs, execution counts, widget state, metadata, and nested structure that must remain valid.</p>
 <p>A percent-cell <code class="docutils literal notranslate">.py</code> file is plain Python text with cell markers. VS Code’s Jupyter extension can treat the markers as cells, while the file remains easy to edit as source code.</p>
 <figure class="align-default" id="s2-context-management-part-2--id2">
-<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-10.png"><img alt="Comparison of notebook JSON structure and percent-cell Python source structure" src="../assets/example-8fa92afa663e.png"/>
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-10.png"><img alt="Comparison of notebook JSON structure and percent-cell Python source structure" src="../../assets/example-8fa92afa663e.png"/>
 </a>
 <figcaption>
 <p><span class="caption-text">A notebook mixes source, outputs, execution state, and metadata. A percent-cell Python file keeps the working source as plain text.</span></p>
@@ -137,7 +137,7 @@ annual_totals.to_csv("outputs/annual_checkout_totals.csv", index=False)
 </table></div>
 </div>
 <figure class="align-default" id="s2-context-management-part-2--id3">
-<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-12.png"><img alt="Bar charts comparing total tokens and runtime for direct notebook and percent-cell Python workflows" src="../assets/example-71cd33af6c05.png"/>
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-12.png"><img alt="Bar charts comparing total tokens and runtime for direct notebook and percent-cell Python workflows" src="../../assets/example-71cd33af6c05.png"/>
 </a>
 <figcaption>
 <p><span class="caption-text">In the controlled comparison, the notebook workflow used more total tokens and took longer.</span></p>
@@ -149,7 +149,7 @@ annual_totals.to_csv("outputs/annual_checkout_totals.csv", index=False)
 </div></blockquote>
 <p>The tool-call categories showed the source of the difference. The direct notebook workflow included notebook-specific work such as structure validation and output extraction. The percent-cell workflow still required execution and output inspection, but it avoided much of the notebook-specific handling.</p>
 <figure class="align-default" id="s2-context-management-part-2--id4">
-<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-13.png"><img alt="Token use by model call for notebook and percent-cell Python workflows" src="../assets/example-85d70920a190.png"/>
+<a class="reference internal image-reference" href="https://analytics-accelerator.colab.duke.edu/_images/session-2-slide-13.png"><img alt="Token use by model call for notebook and percent-cell Python workflows" src="../../assets/example-85d70920a190.png"/>
 </a>
 <figcaption>
 <p><span class="caption-text">The notebook workflow took more model calls. Each call is another chance for context, tool output, and file state to enter the next step.</span></p>
@@ -200,4 +200,4 @@ annual_totals.to_csv("outputs/annual_checkout_totals.csv", index=False)
 </div>
 </section>
 </section><nav aria-label="Previous and next lessons" class="page-navigation"><a class="back" href="setup.html" rel="prev"><span>Back</span><strong>Continue in the same project</strong></a><a class="next" href="agent-skills.html" rel="next"><span>Next</span><strong>Agent Skills</strong></a></nav><footer id="attribution"><p>Adapted from <a href="https://analytics-accelerator.colab.duke.edu/session-1-foundations/index.html">Duke's Session 1</a>. Lesson materials are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer></main></div>
-<script defer="" src="../assets/navigation.js"></script></body></html>
+<script defer="" src="../../assets/navigation.js"></script></body></html>
